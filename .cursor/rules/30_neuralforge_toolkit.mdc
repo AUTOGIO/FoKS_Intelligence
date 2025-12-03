@@ -1,0 +1,17 @@
+---
+type: Auto
+globs:
+  - "neuralforge/**"
+description: NeuralForge (ANE/Core ML tools + optional PostgreSQL memory).
+---
+
+# 30 – NeuralForge Toolkit Rules
+
+- Target macOS Apple Silicon; Python **3.9+** baseline.
+- Recommend PostgreSQL 17 for AI memory features; include setup one-liners when relevant.
+- Provide quick venv/dependency/install commands and launcher snippet.
+- Surface toolkit menu items (ANE monitor, Core ML conversion, PG memory, tests, status).
+- When requested, ship `quick_start.sh` instructions using curl | bash with env safeguards.
+
+References:
+- Toolkit prerequisites & menu — [oai_citation:14-16‡README.md](sediment://file_00000000390c71f595acf4a2e5eb3782)

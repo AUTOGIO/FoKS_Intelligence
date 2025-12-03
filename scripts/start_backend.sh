@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+
+PROJECT_ROOT="/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence"
+BACKEND_DIR="$PROJECT_ROOT/backend"
+VENV_DIR="$BACKEND_DIR/.venv_foks"
+
+echo "[FoKS] Starting backend from: $BACKEND_DIR"
+cd "$BACKEND_DIR"
+
+if [ ! -d "$VENV_DIR" ]; then
+  echo "[FoKS] Creating virtualenv..."
+  python3 -m venv "$VENV_DIR"
+fi
+
+# shellcheck disable=SC1090
+source "$VENV_DIR/bin/activate"
+
+echo "[FoKS] Installing dependencies..."
+pip install --upgrade pip >/dev/null 2>&1
+pip install -r requirements.txt >/dev/null 2>&1
+
+echo "[FoKS] Running uvicorn on port 8000..."
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+

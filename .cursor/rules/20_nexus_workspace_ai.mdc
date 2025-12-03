@@ -1,0 +1,19 @@
+---
+type: Auto
+globs:
+  - "NEXUS/**"
+  - "YABAI/**"
+description: NEXUS workspace intelligence (YABAI + ANE + 3-display).
+---
+
+# 20 – NEXUS Workspace AI Rules
+
+- Require macOS ≥ 12, Apple **M3**, and triple-display aware layouts.
+- Core deps: `yabai`, `skhd`, Python 3.9, optional `n8n`, BetterTouchTool, Keyboard Maestro.
+- Use MLX/transformers stacks stored at `/Volumes/MICRO/models` or `/Volumes/MICRO/LM_STUDIO_MODELS`.
+- Quickstart must cover: start yabai service, run `./launcher.sh`, load workspace profiles, open dashboard.
+- Provide per-profile model recommendations (work/pessoal/AI research) favoring MLX/GGUF builds.
+- Enforce privacy-first local processing; include Streamlit dashboard commands when user requests UI.
+
+References:
+- Requirements & profiles — [oai_citation:8-13‡README.md](sediment://file_0000000027f0720e9a0e49d124816e77)

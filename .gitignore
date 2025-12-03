@@ -1,0 +1,51 @@
+# macOS
+.DS_Store
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.Python
+
+# Virtual environments
+.venv/
+.venv_*/
+venv/
+env/
+
+# Testing / coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+backend/htmlcov/
+
+# Logs
+logs/*
+!logs/.gitkeep
+*.log
+
+# Local data
+backend/data/*
+!backend/data/.gitkeep
+
+# Environment files & secrets
+.env
+*.env
+backend/config/environments/*.env
+
+# Tooling
+node_modules/
+.vscode/
+.idea/
+
+# Misc
+*.swp
+*.swo
+Thumbs.db
+

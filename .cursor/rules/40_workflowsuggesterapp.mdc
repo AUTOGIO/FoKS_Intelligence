@@ -1,0 +1,16 @@
+---
+type: Auto
+globs:
+  - "WorkflowSuggesterApp/**"
+description: Real-time workflow suggestions app (M3 iMac optimized).
+---
+
+# 40 – WorkflowSuggesterApp Rules
+
+- Highlight Apple Silicon M3 18 TOPS Neural Engine benefits; emphasize privacy-first storage.
+- Toolchain: Xcode 13+, macOS 12+, Swift toolchains optimized for Apple Silicon.
+- Provide `xcodebuild` build/test commands with absolute paths when the project is targeted.
+- Reference User/Dev/API docs upon request; keep examples using absolute paths.
+
+References:
+- Feature + build details — [oai_citation:17-18‡README_PROFESSIONAL.md](sediment://file_00000000e73871f5958b45b7f1476e34)

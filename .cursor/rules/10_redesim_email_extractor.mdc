@@ -1,0 +1,24 @@
+---
+type: Auto
+globs:
+  - "redesim-email-extractor/**"
+  - "extension_auto/**"
+description: REDESIM Gmail draft automation + MV3 extension.
+---
+
+# 10 – REDESIM Email Extractor Rules
+
+- Python **3.9+**; orchestrate via Make targets `make setup|dev|test|draft|status`.
+- Gmail OAuth scope restricted to **compose-only**; tokens stored locally (`GMAIL_CREDENTIALS_PATH`, `GMAIL_TOKEN_PATH`).
+- Draft automation must filter addresses containing `@sefaz.pb.gov.br`.
+- Chrome extension stays on Manifest V3 with minimal permissions (`activeTab`, `storage`, `downloads`, `notifications`).
+- Batch executor command:  
+  ```bash
+  python3 /absolute/path/to/redesim-email-extractor/batch_process_emails.py
+  ```
+- Recommended env vars: `REDESIM_BASE_URL`, `DOWNLOAD_PATH`.
+- Provide pytest targets + coverage hints; validate extension scripts with `node -c`.
+- Respect privacy-first posture; no external data syncing.
+
+References:
+- Make targets & FAQ — [oai_citation:1‡README.md](sediment://file_00000000f914720ea21410ff4a8fb553)

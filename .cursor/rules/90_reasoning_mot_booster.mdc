@@ -1,0 +1,16 @@
+---
+type: Agent Requested
+globs:
+  - "**/*"
+description: Matrix-of-Thought scaffolding for complex multi-hop tasks.
+---
+
+# 90 – Reasoning MoT Booster
+
+- Invoke Matrix-of-Thought (MoT) when tasks need multi-source, multi-step synthesis.
+- Start with compact matrices (≈3×4). Explain trade-offs (latency vs. quality) before growing the matrix.
+- Keep intermediate artifacts structured (JSON preferred) and avoid redundant branches.
+- Highlight MoT ↔ CoT/ToT relationships and when to switch strategies.
+
+References:
+- MoT methodology — [oai_citation:23-25‡MTQA Matrix of Thought.pdf](file-service://file-1kA2pmXnojbHR67o4Jv53V)

@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: foks-postgres
+    environment:
+      POSTGRES_DB: foks_intelligence
+      POSTGRES_USER: foks_user
+      POSTGRES_PASSWORD: foks_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U foks_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  foks-backend:
+    build: .
+    container_name: foks-intelligence-backend
+    ports:
+      - "8001:8001"
+    environment:
+      - FOKS_ENV=development
+      - LMSTUDIO_BASE_URL=http://host.docker.internal:1234/v1/chat/completions
+      - DATABASE_URL=postgresql://foks_user:foks_password@postgres:5432/foks_intelligence
+      - FOKS_LOG_FILE=/app/logs/app.log
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import requests; requests.get('http://localhost:8001/health')",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  postgres_data:
