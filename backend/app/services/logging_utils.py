@@ -1,148 +1,102 @@
 from __future__ import annotations
 
-import logging
-from logging.handlers import RotatingFileHandler
-from pathlib import Path
-from typing import Dict
-
-from app.config import settings
-
-_LOGGER_CACHE: Dict[str, logging.Logger] = {}
-
-
-def _build_handler() -> RotatingFileHandler:
-    """Create a rotating file handler pointing to the configured log file."""
-    log_path = Path(settings.log_file_path)
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    handler = RotatingFileHandler(
-        log_path,
-        maxBytes=5 * 1024 * 1024,
-        backupCount=5,
-    )
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
-    )
-    handler.setFormatter(formatter)
-    return handler
-
-
-def get_logger(name: str) -> logging.Logger:
-    """Return a shared logger configured for both console and file output."""
-    if name in _LOGGER_CACHE:
-        return _LOGGER_CACHE[name]
-
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
-    logger.propagate = False
-
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
-    )
-
-    file_handler = _build_handler()
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-
-    # Avoid duplicating handlers if this is called repeatedly.
-    if not logger.handlers:
-        logger.addHandler(file_handler)
-        logger.addHandler(console_handler)
-
-    _LOGGER_CACHE[name] = logger
-    return logger
-from __future__ import annotations
-
 import json
 import logging
 import re
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from typing import Any, Dict
 
 from app.config import settings
 
+_LOGGER_CACHE: Dict[str, logging.Logger] = {}
 
-def sanitize_secrets(text: str) -> str:
-    """
-    Sanitize secrets from log messages.
+SENSITIVE_PATTERNS = [
+    (r'api[_-]?key["\']?\s*[:=]\s*["\']?([^"\'\s]+)', 'api_key="***"'),
+    (r'password["\']?\s*[:=]\s*["\']?([^"\'\s]+)', 'password="***"'),
+    (r'token["\']?\s*[:=]\s*["\']?([^"\'\s]+)', 'token="***"'),
+    (r'secret["\']?\s*[:=]\s*["\']?([^"\'\s]+)', 'secret="***"'),
+    (
+        r'authorization["\']?\s*[:=]\s*["\']?bearer\s+([^"\'\s]+)',
+        'authorization="Bearer ***"',
+        re.IGNORECASE,
+    ),
+    (r'x-api-key["\']?\s*[:=]\s*["\']?([^"\'\s]+)', 'x-api-key="***"', re.IGNORECASE),
+]
+SENSITIVE_KEYS = {"api_key", "token", "password", "secret", "authorization", "x-api-key"}
 
-    Args:
-        text: Text that may contain secrets
 
-    Returns:
-        Text with secrets masked
-    """
+def sanitize_text(text: str) -> str:
+    """Mask sensitive tokens before persisting logs."""
     if not text:
         return text
-
-    # List of patterns to mask (API keys, passwords, tokens, etc.)
-    patterns = [
-        (r'api[_-]?key["\']?\s*[:=]\s*["\']?([^"\'\s]+)', r'api_key="***"'),
-        (r'password["\']?\s*[:=]\s*["\']?([^"\'\s]+)', r'password="***"'),
-        (r'token["\']?\s*[:=]\s*["\']?([^"\'\s]+)', r'token="***"'),
-        (r'secret["\']?\s*[:=]\s*["\']?([^"\'\s]+)', r'secret="***"'),
-        (r'authorization["\']?\s*[:=]\s*["\']?bearer\s+([^"\'\s]+)', r'authorization="Bearer ***"', re.IGNORECASE),
-        (r'x-api-key["\']?\s*[:=]\s*["\']?([^"\'\s]+)', r'x-api-key="***"', re.IGNORECASE),
-    ]
-
     sanitized = text
-    for pattern_info in patterns:
-        if len(pattern_info) == 3:
-            pattern, replacement, flags = pattern_info
-            sanitized = re.sub(pattern, replacement, sanitized, flags=flags)
+    for pattern in SENSITIVE_PATTERNS:
+        if len(pattern) == 3:
+            regex, replacement, flags = pattern
+            sanitized = re.sub(regex, replacement, sanitized, flags=flags)
         else:
-            pattern, replacement = pattern_info
-            sanitized = re.sub(pattern, replacement, sanitized)
-
+            regex, replacement = pattern
+            sanitized = re.sub(regex, replacement, sanitized)
     return sanitized
 
 
+def sanitize_payload(payload: Any) -> Any:
+    """Recursively sanitize payload structures."""
+    if payload is None:
+        return None
+    if isinstance(payload, dict):
+        sanitized: Dict[str, Any] = {}
+        for key, value in payload.items():
+            normalized_key = key.lower().replace("-", "_") if isinstance(key, str) else key
+            if isinstance(normalized_key, str) and normalized_key in SENSITIVE_KEYS:
+                if normalized_key == "authorization" and isinstance(value, str):
+                    sanitized[key] = "Bearer ***"
+                else:
+                    sanitized[key] = "***"
+                continue
+            sanitized[key] = sanitize_payload(value)
+        return sanitized
+    if isinstance(payload, list):
+        return [sanitize_payload(item) for item in payload]
+    if isinstance(payload, str):
+        return sanitize_text(payload)
+    return payload
+
+
 class JSONFormatter(logging.Formatter):
-    """JSON formatter for structured logging."""
+    """Formatter that emits structured JSON logs."""
 
     def format(self, record: logging.LogRecord) -> str:
-        message = record.getMessage()
-        # Sanitize secrets from log message
-        message = sanitize_secrets(message)
+        event_name = getattr(record, "event", record.getMessage())
+        payload = sanitize_payload(getattr(record, "payload", record.__dict__.get("payload")))
 
         log_data = {
-            "timestamp": self.formatTime(record, self.datefmt),
+            "timestamp": self.formatTime(record, "%Y-%m-%dT%H:%M:%S%z"),
             "level": record.levelname,
             "logger": record.name,
-            "message": message,
             "module": record.module,
             "function": record.funcName,
             "line": record.lineno,
+            "event": sanitize_text(str(event_name)),
+            "payload": payload,
         }
 
-        # Add exception info if present
         if record.exc_info:
-            exc_text = self.formatException(record.exc_info)
-            log_data["exception"] = sanitize_secrets(exc_text)
-
-        # Add extra fields if present
-        if hasattr(record, "extra"):
-            extra = record.extra.copy()
-            # Sanitize extra fields
-            for key, value in extra.items():
-                if isinstance(value, str):
-                    extra[key] = sanitize_secrets(value)
-            log_data.update(extra)
+            log_data["exception"] = sanitize_text(self.formatException(record.exc_info))
 
         return json.dumps(log_data, ensure_ascii=False)
 
 
-class SecureFormatter(logging.Formatter):
-    """Secure formatter that sanitizes secrets from log messages."""
+class TextFormatter(logging.Formatter):
+    """Human readable formatter that still sanitizes sensitive data."""
 
     def format(self, record: logging.LogRecord) -> str:
-        # Get original formatted message
         original = super().format(record)
-        # Sanitize secrets
-        return sanitize_secrets(original)
+        return sanitize_text(original)
 
 
-def get_log_level() -> int:
-    """Get log level from settings."""
+def _get_log_level() -> int:
     level_map = {
         "DEBUG": logging.DEBUG,
         "INFO": logging.INFO,
@@ -153,37 +107,44 @@ def get_log_level() -> int:
     return level_map.get(settings.log_level, logging.INFO)
 
 
+def _build_formatter() -> logging.Formatter:
+    if settings.log_format_json:
+        return JSONFormatter()
+    return TextFormatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+
+def _build_file_handler(formatter: logging.Formatter) -> RotatingFileHandler:
+    log_path = Path(settings.log_file_path)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    handler = RotatingFileHandler(
+        log_path,
+        maxBytes=settings.log_max_bytes,
+        backupCount=settings.log_backup_count,
+        encoding="utf-8",
+    )
+    handler.setFormatter(formatter)
+    return handler
+
+
 def get_logger(name: str) -> logging.Logger:
+    """Return a shared structured logger with file + console handlers."""
+    if name in _LOGGER_CACHE:
+        return _LOGGER_CACHE[name]
+
+    formatter = _build_formatter()
+
     logger = logging.getLogger(name)
-    logger.setLevel(get_log_level())
+    logger.setLevel(_get_log_level())
+    logger.propagate = False
 
     if not logger.handlers:
-        log_path = Path(settings.log_file_path)
-        log_path.parent.mkdir(parents=True, exist_ok=True)
+        file_handler = _build_file_handler(formatter)
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(formatter)
+        console_handler.setLevel(_get_log_level())
+        logger.addHandler(file_handler)
+        logger.addHandler(console_handler)
 
-        handler = RotatingFileHandler(
-            log_path,
-            maxBytes=10_000_000,  # 10MB
-            backupCount=10,  # Keep 10 backup files
-            encoding="utf-8",
-        )
-
-        if settings.log_format_json:
-            formatter = JSONFormatter()
-        else:
-            # Use secure formatter to sanitize secrets even in text format
-            formatter = SecureFormatter(
-                "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-            )
-
-        handler.setFormatter(formatter)
-
-        console = logging.StreamHandler()
-        console.setFormatter(formatter)
-        console.setLevel(get_log_level())
-
-        logger.addHandler(handler)
-        logger.addHandler(console)
-
+    _LOGGER_CACHE[name] = logger
     return logger
 

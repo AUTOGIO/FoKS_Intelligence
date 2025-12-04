@@ -1,0 +1,30 @@
+{
+  "Profiles": [
+    {
+      "Guid": "fbp-ops-terminal-0001-0000-0000-000000000001",
+      "Name": "FBP Ops Terminal",
+      "Badge Text": "FBP Backend",
+      "Use Custom Badge": true,
+      "Working Directory": "$HOME/Documents/FBP_Backend",
+      "Custom Command": "Yes",
+      "Command": "/bin/zsh -lc 'cd \"$HOME/Documents/FBP_Backend\" && VENV_PATH=\"$HOME/Documents/.venvs/fbp\"; if [ -d \"$VENV_PATH\" ]; then source \"$VENV_PATH/bin/activate\"; fi && if [ -f \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/logs/fbp_backend.out\" ]; then tail -n 100 -F \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/logs/fbp_backend.out\" & fi && exec /bin/zsh'",
+      "Tab Color": {
+        "Red Component": 0.8,
+        "Green Component": 0.2,
+        "Blue Component": 0.2
+      },
+      "Foreground Color": {
+        "Red Component": 1.0,
+        "Green Component": 0.8,
+        "Blue Component": 0.8
+      },
+      "Background Color": {
+        "Red Component": 0.2,
+        "Green Component": 0.0,
+        "Blue Component": 0.0
+      }
+    }
+  ]
+}
+
+

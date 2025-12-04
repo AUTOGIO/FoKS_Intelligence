@@ -1,0 +1,17 @@
+{
+  "name": "FBP:Restart",
+  "description": "Restart the FBP backend via Ops scripts (kill_all + fbp_boot).",
+  "trigger": "manual",
+  "actions": [
+    {
+      "type": "run_shell_script",
+      "script": "/bin/bash \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/scripts/kill_all.sh\""
+    },
+    {
+      "type": "run_shell_script",
+      "script": "/bin/bash \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/scripts/fbp_boot.sh\""
+    }
+  ]
+}
+
+

@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import os
 import platform
+import subprocess
 from typing import Any, Dict
 
-from app.config import hardware, settings
+from app.config import settings
 from app.services.logging_utils import get_logger
 
 logger = get_logger("m3_optimizations")
@@ -98,8 +99,6 @@ def check_neural_engine_available() -> bool:
 
     try:
         # Check for Core ML / Neural Engine availability
-        import subprocess
-
         result = subprocess.run(
             ["sysctl", "-n", "hw.optional.arm64"],
             capture_output=True,

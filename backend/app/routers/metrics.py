@@ -2,12 +2,36 @@
 
 from __future__ import annotations
 
+from typing import Any, Dict
+
 from fastapi import APIRouter
 from fastapi.responses import PlainTextResponse
 
 from app.services.monitoring import monitoring
 
 router = APIRouter(prefix="/metrics", tags=["metrics"])
+
+
+@router.get("")
+async def metrics_root() -> Dict[str, Any]:
+    """
+    JSON summary metrics endpoint at `/metrics`.
+
+    Returns:
+        dict: High-level metrics summary used by tests and dashboards.
+    """
+    stats = monitoring.get_stats()
+    return {
+        "total_requests": stats["requests"]["total"],
+        "successful_requests": stats["requests"]["success"],
+        "failed_requests": stats["requests"]["failures"],
+        "avg_response_time_ms": stats["requests"]["avg_response_time_ms"],
+        "total_tasks": stats["tasks"]["total"],
+        "successful_tasks": stats["tasks"]["success"],
+        "failed_tasks": stats["tasks"]["failures"],
+        "uptime_seconds": stats["uptime_seconds"],
+        "uptime_formatted": stats["uptime_formatted"],
+    }
 
 
 @router.get("/prometheus", response_class=PlainTextResponse)

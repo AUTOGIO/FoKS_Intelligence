@@ -1,0 +1,24 @@
+{
+  "Profiles": [
+    {
+      "Guid": "foks-ops-terminal-0001-0000-0000-000000000001",
+      "Name": "FoKS Ops Terminal",
+      "Badge Text": "FoKS OPS",
+      "Use Custom Badge": true,
+      "Hotkey Window": true,
+      "Keyboard Shortcut": "0x3,0x3e", 
+      "Working Directory": "$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence",
+      "Custom Command": "Yes",
+      "Command": "/bin/zsh -lc 'cd \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence\" && if [ -d backend/.venv_foks ]; then source backend/.venv_foks/bin/activate; fi && export PYTHONPATH=backend:${PYTHONPATH:-} && exec /bin/zsh'",
+      "Status Bar Enabled": true,
+      "Status Bar Components": [
+        { "type": "cpu_utilization", "configuration": {} },
+        { "type": "memory_usage", "configuration": {} },
+        { "type": "network_throughput", "configuration": {} },
+        { "type": "clock", "configuration": {} }
+      ]
+    }
+  ]
+}
+
+

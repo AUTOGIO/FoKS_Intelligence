@@ -1,0 +1,17 @@
+{
+  "name": "FoKS:Restart",
+  "description": "Restart the FoKS backend via Ops scripts (kill_all + foks_boot).",
+  "trigger": "manual",
+  "actions": [
+    {
+      "type": "run_shell_script",
+      "script": "/bin/bash \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/scripts/kill_all.sh\""
+    },
+    {
+      "type": "run_shell_script",
+      "script": "/bin/bash \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/scripts/foks_boot.sh\""
+    }
+  ]
+}
+
+

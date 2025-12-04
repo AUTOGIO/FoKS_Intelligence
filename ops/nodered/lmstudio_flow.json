@@ -1,0 +1,42 @@
+[
+  {
+    "id": "lmstudio-inject",
+    "type": "inject",
+    "z": "lmstudio-flow-1",
+    "name": "Trigger LM Studio Ping",
+    "props": [],
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.1,
+    "x": 200,
+    "y": 100,
+    "wires": [["lmstudio-http"]]
+  },
+  {
+    "id": "lmstudio-http",
+    "type": "http request",
+    "z": "lmstudio-flow-1",
+    "name": "GET /v1/models",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://127.0.0.1:1234/v1/models",
+    "tls": "",
+    "x": 450,
+    "y": 100,
+    "wires": [["lmstudio-debug"]]
+  },
+  {
+    "id": "lmstudio-debug",
+    "type": "debug",
+    "z": "lmstudio-flow-1",
+    "name": "Models Response",
+    "active": true,
+    "tosidebar": true,
+    "x": 700,
+    "y": 100,
+    "wires": []
+  }
+]
+
+

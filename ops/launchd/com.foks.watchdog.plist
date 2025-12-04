@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.foks.watchdog</string>
+
+    <key>ProgramArguments</key>
+    <array>
+      <string>/bin/bash</string>
+      <string>-lc</string>
+      <string>$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/monitors/watchdog_foks.sh</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <dict>
+      <key>SuccessfulExit</key>
+      <false/>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/dnigga/Library/Logs/FoKS/com.foks.watchdog.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/dnigga/Library/Logs/FoKS/com.foks.watchdog.err.log</string>
+  </dict>
+</plist>
+
+

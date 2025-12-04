@@ -67,10 +67,12 @@ class TestConversationStore:
 
     def test_list_conversations(self, conversation_store_instance):
         """Test listing conversations."""
-        conversation_store_instance.create_conversation(user_id="test_user", title="Conv 1")
-        conversation_store_instance.create_conversation(user_id="test_user", title="Conv 2")
+        conv1 = conversation_store_instance.create_conversation(user_id="test_user", title="Conv 1")
+        conv2 = conversation_store_instance.create_conversation(user_id="test_user", title="Conv 2")
         conversations = conversation_store_instance.list_conversations("test_user")
-        assert len(conversations) == 2
+        conv_ids = {c.id for c in conversations}
+        assert conv1.id in conv_ids
+        assert conv2.id in conv_ids
 
     def test_add_message(self, conversation_store_instance):
         """Test adding a message."""

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 from fastapi.testclient import TestClient
+from unittest.mock import AsyncMock, MagicMock
 
 from app.main import app
 
@@ -20,7 +21,7 @@ class TestHealthEndpoint:
         data = response.json()
         assert data["status"] == "ok"
         assert "app" in data
-        assert "env" in data
+        assert "environment" in data
 
 
 class TestChatEndpoint:
@@ -46,44 +47,98 @@ class TestVisionEndpoint:
         response = client.post("/vision/analyze", json={})
         assert response.status_code == 422
 
-    def test_vision_with_description(self) -> None:
-        """Test vision endpoint with description."""
+    def test_vision_requires_image_base64(self) -> None:
+        """Vision requests require base64 image payload."""
         response = client.post(
             "/vision/analyze",
             json={"description": "Test image description", "source": "test"},
         )
+        assert response.status_code == 400
+
+    def test_vision_with_base64(self, monkeypatch) -> None:
+        """Vision endpoint delegates to service layer."""
+        from app.routers import vision as vision_router
+
+        fake_result = {
+            "model": "qwen3-vision-mlx",
+            "provider": "lmstudio",
+            "duration_ms": 10,
+            "response": "Cute cat detected",
+        }
+        monkeypatch.setattr(
+            vision_router.vision_service,
+            "analyze_image",
+            AsyncMock(return_value=fake_result),
+        )
+
+        response = client.post(
+            "/vision/analyze",
+            json={
+                "description": "Test image description",
+                "image_base64": "aGVsbG8=",
+            },
+        )
         assert response.status_code == 200
         data = response.json()
-        assert "summary" in data
-        assert "details" in data
+        assert data["summary"] == "Cute cat detected"
+        assert data["details"]["model"] == "qwen3-vision-mlx"
 
 
 class TestTasksEndpoint:
     """Test suite for tasks endpoint."""
 
-    def test_tasks_missing_task_name(self) -> None:
-        """Test tasks endpoint with missing task_name."""
+    def test_tasks_missing_type(self) -> None:
+        """Task endpoint validation for missing type."""
         response = client.post("/tasks/run", json={})
         assert response.status_code == 422
 
-    def test_tasks_invalid_task(self) -> None:
-        """Test tasks endpoint with invalid task."""
+    def test_tasks_delegates_to_runner(self, monkeypatch) -> None:
+        """Router should delegate execution to task runner."""
+        from app.routers import tasks as tasks_router
+
+        fake_runner = MagicMock()
+        fake_runner.run_task = AsyncMock(
+            return_value={
+                "task": "run_shell",
+                "success": True,
+                "duration_ms": 1,
+                "payload": {"stdout": "hi"},
+                "error": None,
+            }
+        )
+        monkeypatch.setattr(tasks_router, "task_runner", fake_runner)
+
         response = client.post(
             "/tasks/run",
-            json={"task_name": "invalid_task", "params": {}, "source": "test"},
+            json={"type": "run_shell", "args": {"cmd": "echo hi"}},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["success"] is True
+        tasks_router.task_runner.run_task.assert_awaited()
+
+    def test_tasks_returns_error_envelope(self, monkeypatch) -> None:
+        """Router returns structured error envelope from task runner."""
+        from app.routers import tasks as tasks_router
+
+        fake_runner = MagicMock()
+        fake_runner.run_task = AsyncMock(
+            return_value={
+                "task": "run_shell",
+                "success": False,
+                "duration_ms": 1,
+                "payload": {},
+                "error": "boom",
+            }
+        )
+        monkeypatch.setattr(tasks_router, "task_runner", fake_runner)
+
+        response = client.post(
+            "/tasks/run",
+            json={"type": "run_shell", "args": {"cmd": "echo hi"}},
         )
         assert response.status_code == 200
         data = response.json()
         assert data["success"] is False
-
-    def test_tasks_say_missing_params(self) -> None:
-        """Test say task with missing parameters."""
-        response = client.post(
-            "/tasks/run",
-            json={"task_name": "say", "params": {}, "source": "test"},
-        )
-        # Should return 400 Bad Request due to validation
-        assert response.status_code == 400
-        data = response.json()
-        assert "detail" in data
+        assert data["error"] == "boom"
 

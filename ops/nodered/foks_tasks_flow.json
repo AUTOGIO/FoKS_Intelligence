@@ -1,0 +1,46 @@
+[
+  {
+    "id": "foks-inject",
+    "type": "inject",
+    "z": "foks-flow-1",
+    "name": "Trigger FoKS Task",
+    "props": [],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 200,
+    "y": 200,
+    "wires": [["foks-http"]]
+  },
+  {
+    "id": "foks-http",
+    "type": "http request",
+    "z": "foks-flow-1",
+    "name": "POST /tasks",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://127.0.0.1:8000/tasks",
+    "tls": "",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "x": 460,
+    "y": 200,
+    "wires": [["foks-debug"]]
+  },
+  {
+    "id": "foks-debug",
+    "type": "debug",
+    "z": "foks-flow-1",
+    "name": "FoKS Task Response",
+    "active": true,
+    "tosidebar": true,
+    "x": 750,
+    "y": 200,
+    "wires": []
+  }
+]
+
+

@@ -1,412 +1,329 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+import asyncio
+import json
+import time
+from dataclasses import dataclass
+from typing import Any, AsyncGenerator, Callable, Dict, List, Optional
 
 import httpx
 
 from app.config import settings
 from app.models import ChatMessage
+from app.services import model_registry
 from app.services.logging_utils import get_logger
+from app.services.model_registry import ModelInfo
 
 logger = get_logger(__name__)
 
 
-class LMStudioClient:
-    """Simple OpenAI-compatible client for the local LM Studio server."""
+@dataclass
+class LMStudioResult:
+    model: str
+    response: Any
+    provider: str = "lmstudio"
+    duration_ms: int = 0
+    input_tokens: int = 0
+    output_tokens: int = 0
+    raw: Optional[Dict[str, Any]] = None
 
-    def __init__(
-        self,
-        base_url: Optional[str] = None,
-        model: Optional[str] = None,
-        api_key: Optional[str] = None,
-    ) -> None:
-        self.base_url = base_url or settings.lmstudio_base_url
-        self.model = model or settings.lmstudio_model
-        self.api_key = api_key or settings.lmstudio_api_key
-
-    async def chat(self, message: str, history: Optional[List[ChatMessage]] = None) -> Dict[str, Any]:
-        """Send a chat completion request and return the raw JSON response."""
-        payload = {
+    def to_dict(self) -> Dict[str, Any]:
+        return {
             "model": self.model,
-            "messages": self._build_messages(message, history),
+            "provider": self.provider,
+            "duration_ms": self.duration_ms,
+            "input_tokens": self.input_tokens,
+            "output_tokens": self.output_tokens,
+            "response": self.response,
+            "raw": self.raw,
         }
 
-        headers = {"Content-Type": "application/json"}
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
 
-        logger.info(
-            "Sending prompt to LM Studio",
-            extra={"model": self.model, "base_url": self.base_url},
-        )
-
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            response = await client.post(self.base_url, json=payload, headers=headers)
-            response.raise_for_status()
-            data = response.json()
-            logger.info("LM Studio responded", extra={"has_choices": "choices" in data})
-            return data
-
-    def _build_messages(
+class LMStudioClientError(RuntimeError):
+    def __init__(
         self,
         message: str,
-        history: Optional[List[ChatMessage]],
-    ) -> List[Dict[str, str]]:
-        serialized_history: List[Dict[str, str]] = []
-        if history:
-            serialized_history = [{"role": item.role, "content": item.content} for item in history]
-        serialized_history.append({"role": "user", "content": message})
-        return serialized_history
-
-    @staticmethod
-    def extract_reply(data: Dict[str, Any]) -> str:
-        """Extract assistant text from an OpenAI-style response."""
-        try:
-            return data["choices"][0]["message"]["content"].strip()
-        except (KeyError, IndexError, TypeError):
-            return "Nenhuma resposta foi gerada pelo modelo local."
-from __future__ import annotations
-
-import asyncio
-from typing import Any, Dict, List, Optional
-
-import httpx
-
-from app.config import settings
-from app.models import ChatMessage
-from app.services.logging_utils import get_logger
-from app.utils.circuit_breaker import CircuitBreaker, CircuitState
-
-logger = get_logger("lmstudio_client")
-
-# Global circuit breaker for LM Studio
-lmstudio_circuit_breaker = CircuitBreaker(
-    failure_threshold=5,
-    timeout=60.0,
-    expected_exception=Exception,
-)
-
-
-class LMStudioError(Exception):
-    """Base exception for LM Studio errors."""
-
-    error_code: str = "LM_STUDIO_ERROR"
-
-    def __init__(self, message: str, error_code: str = "LM_STUDIO_ERROR", details: Optional[Dict[str, Any]] = None) -> None:
+        *,
+        status: Optional[int] = None,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
         super().__init__(message)
-        self.error_code = error_code
+        self.status = status
         self.details = details or {}
 
 
-class DatabaseError(Exception):
-    """Exception for database errors."""
-
-    error_code: str = "DATABASE_ERROR"
-
-
-class ValidationError(Exception):
-    """Exception for validation errors."""
-
-    error_code: str = "VALIDATION_ERROR"
+ClientFactory = Callable[[], httpx.AsyncClient]
 
 
 class LMStudioClient:
-    def __init__(self) -> None:
-        self.base_url = settings.lmstudio_base_url
-        self.model = settings.lmstudio_model
-        self.api_key = settings.lmstudio_api_key
-        # HTTP connection pool for better performance
+    """OpenAI-compatible client for local LM Studio (chat, embeddings, vision, streaming)."""
+
+    def __init__(self, *, client_factory: Optional[ClientFactory] = None) -> None:
+        self.base_url = settings.lmstudio_base_url.rstrip("/")
+        self._client_factory = client_factory
         self._client: Optional[httpx.AsyncClient] = None
 
     async def _get_client(self) -> httpx.AsyncClient:
-        """Get or create HTTP client with connection pooling."""
         if self._client is None:
-            limits = httpx.Limits(max_keepalive_connections=10, max_connections=20)
-            timeout = httpx.Timeout(settings.request_timeout_seconds, connect=10.0)
-            self._client = httpx.AsyncClient(limits=limits, timeout=timeout)
+            if self._client_factory:
+                self._client = self._client_factory()
+            else:
+                timeout = httpx.Timeout(settings.default_timeout_seconds)
+                limits = httpx.Limits(max_connections=20, max_keepalive_connections=10)
+                self._client = httpx.AsyncClient(timeout=timeout, limits=limits)
         return self._client
 
     async def close(self) -> None:
-        """Close HTTP client connection pool."""
         if self._client:
             await self._client.aclose()
             self._client = None
 
-    async def _retry_request(
-        self,
-        request_func,
-        *args,
-        max_retries: Optional[int] = None,
-        backoff_seconds: Optional[float] = None,
-        **kwargs,
-    ) -> Any:
-        """
-        Retry a request with exponential backoff.
+    def _build_url(self, path: str) -> str:
+        if not path:
+            return self.base_url
+        if path.startswith("http"):
+            return path
+        base = self.base_url.rstrip("/")
+        suffix = path if path.startswith("/") else f"/{path}"
+        return f"{base}{suffix}"
 
-        Args:
-            request_func: Async function to retry
-            *args: Positional arguments for request_func
-            max_retries: Maximum number of retries (defaults to settings.max_retries)
-            backoff_seconds: Initial backoff in seconds (defaults to settings.retry_backoff_seconds)
-            **kwargs: Keyword arguments for request_func
+    def _headers(self) -> Dict[str, str]:
+        headers = {"Content-Type": "application/json"}
+        if settings.lmstudio_api_key:
+            headers["Authorization"] = f"Bearer {settings.lmstudio_api_key}"
+        return headers
 
-        Returns:
-            Result from request_func
+    def _select_model(self, model_name: Optional[str], task_type: str, require_tools: bool) -> ModelInfo:
+        if model_name:
+            return model_registry.resolve_model(model_name)
+        normalized = (task_type or "chat").lower()
+        if require_tools:
+            for entry in model_registry.list_models():
+                if entry.supports_tools:
+                    return entry
+        try:
+            return model_registry.get_default_model(normalized)
+        except ValueError:
+            return model_registry.get_default_model("chat")
 
-        Raises:
-            LMStudioError: If all retries fail
-        """
-        max_retries = max_retries or settings.max_retries
-        backoff_seconds = backoff_seconds or settings.retry_backoff_seconds
+    def _serialize_messages(self, message: str, history: Optional[List[ChatMessage]]) -> List[Dict[str, str]]:
+        serialized: List[Dict[str, str]] = []
+        if history:
+            for item in history:
+                payload = item.model_dump() if hasattr(item, "model_dump") else {"role": item.role, "content": item.content}
+                serialized.append(payload)
+        serialized.append({"role": "user", "content": message})
+        return serialized
 
-        last_exception = None
-        for attempt in range(max_retries + 1):
-            try:
-                return await request_func(*args, **kwargs)
-            except httpx.HTTPStatusError as exc:
-                # Don't retry on client errors (4xx)
-                if 400 <= exc.response.status_code < 500:
-                    raise LMStudioError(
-                        f"LM Studio client error: {exc.response.status_code}",
-                        error_code="LM_STUDIO_CLIENT_ERROR",
-                        details={"status_code": exc.response.status_code, "response": exc.response.text},
-                    ) from exc
-                # Retry on server errors (5xx) and network errors
-                last_exception = exc
-                if attempt < max_retries:
-                    wait_time = backoff_seconds * (2 ** attempt)
-                    logger.warning(
-                        "LM Studio request failed (attempt %d/%d), retrying in %.2fs: %s",
-                        attempt + 1,
-                        max_retries + 1,
-                        wait_time,
-                        exc,
-                    )
-                    await asyncio.sleep(wait_time)
-                else:
-                    raise LMStudioError(
-                        f"LM Studio server error after {max_retries + 1} attempts: {exc.response.status_code}",
-                        error_code="LM_STUDIO_SERVER_ERROR",
-                        details={"status_code": exc.response.status_code, "attempts": max_retries + 1},
-                    ) from exc
-            except httpx.RequestError as exc:
-                # Network errors - retry
-                last_exception = exc
-                if attempt < max_retries:
-                    wait_time = backoff_seconds * (2 ** attempt)
-                    logger.warning(
-                        "LM Studio network error (attempt %d/%d), retrying in %.2fs: %s",
-                        attempt + 1,
-                        max_retries + 1,
-                        wait_time,
-                        exc,
-                    )
-                    await asyncio.sleep(wait_time)
-                else:
-                    raise LMStudioError(
-                        f"LM Studio network error after {max_retries + 1} attempts",
-                        error_code="LM_STUDIO_NETWORK_ERROR",
-                        details={"attempts": max_retries + 1},
-                    ) from exc
-            except Exception as exc:  # noqa: BLE001
-                # Unexpected errors - don't retry
-                raise LMStudioError(
-                    f"Unexpected error in LM Studio request: {exc}",
-                    error_code="LM_STUDIO_UNEXPECTED_ERROR",
-                ) from exc
-
-        # Should never reach here, but just in case
-        if last_exception:
-            raise LMStudioError(
-                "LM Studio request failed after all retries",
-                error_code="LM_STUDIO_ERROR",
-            ) from last_exception
-
-    async def chat(self, message: str, history: Optional[List[ChatMessage]] = None) -> Dict[str, Any]:
-        """
-        Sends a chat-completion request to LM Studio (OpenAI-compatible) with retry logic.
-
-        Args:
-            message: User message
-            history: Optional conversation history
-
-        Returns:
-            Response from LM Studio
-
-        Raises:
-            LMStudioError: If request fails after retries
-        """
-        # Use provided model or default
-        model_to_use = model or self.model
-
-        payload: Dict[str, Any] = {
-            "model": model_to_use,
-            "messages": [],
+    def _usage_stats(self, data: Dict[str, Any]) -> Dict[str, int]:
+        usage = data.get("usage") or {}
+        completion = usage.get("completion_tokens")
+        if completion is None:
+            completion = usage.get("completionTokens", 0)
+        return {
+            "input_tokens": usage.get("prompt_tokens", usage.get("promptTokens", 0)),
+            "output_tokens": completion or 0,
         }
 
-        if history:
-            # Use model_dump for Pydantic v2 compatibility
-            payload["messages"].extend(
-                [m.model_dump() if hasattr(m, "model_dump") else m.dict() for m in history]
-            )
+    async def _execute_with_retry(self, request_coro: Callable[[], Any]):
+        attempts = max(1, settings.default_retry_attempts)
+        backoff = settings.retry_backoff_seconds
+        for attempt in range(attempts):
+            try:
+                return await request_coro()
+            except httpx.HTTPStatusError as exc:
+                status = exc.response.status_code
+                if 400 <= status < 500:
+                    raise LMStudioClientError("LM Studio rejected the request", status=status) from exc
+                if attempt == attempts - 1:
+                    raise LMStudioClientError("LM Studio server error", status=status) from exc
+            except httpx.TimeoutException as exc:
+                if attempt == attempts - 1:
+                    raise LMStudioClientError("LM Studio request timed out") from exc
+            except httpx.RequestError as exc:
+                if attempt == attempts - 1:
+                    raise LMStudioClientError("LM Studio connection error") from exc
+            await asyncio.sleep(backoff * (2**attempt))
+        raise LMStudioClientError("LM Studio request failed after retries")
 
-        payload["messages"].append({"role": "user", "content": message})
+    async def _request_json(
+        self,
+        url: str,
+        payload: Dict[str, Any],
+        *,
+        timeout: Optional[float] = None,
+    ) -> tuple[Dict[str, Any], int]:
+        headers = self._headers()
+        start = time.perf_counter()
 
-        headers: Dict[str, str] = {"Content-Type": "application/json"}
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
-
-        async def _make_request() -> Dict[str, Any]:
-            logger.info("Sending request to LM Studio...")
+        async def _perform() -> httpx.Response:
             client = await self._get_client()
-            response = await client.post(self.base_url, json=payload, headers=headers)
-            response.raise_for_status()
-            data = response.json()
-            logger.info("Received response from LM Studio")
-            return data
-
-        # Use circuit breaker to protect against cascading failures
-        if lmstudio_circuit_breaker.get_state() == CircuitState.OPEN:
-            raise LMStudioError(
-                "LM Studio circuit breaker is OPEN. Service unavailable.",
-                error_code="LM_STUDIO_CIRCUIT_OPEN",
+            response = await client.post(
+                url,
+                json=payload,
+                headers=headers,
+                timeout=timeout or settings.default_timeout_seconds,
             )
+            response.raise_for_status()
+            return response
 
-        try:
-            result = await self._retry_request(_make_request)
-            lmstudio_circuit_breaker._on_success()
-            return result
-        except Exception as exc:
-            lmstudio_circuit_breaker._on_failure()
-            raise
+        response = await self._execute_with_retry(_perform)
+        elapsed_ms = int((time.perf_counter() - start) * 1000)
+        return response.json(), elapsed_ms
+
+    def _result_from_payload(
+        self,
+        model_info: ModelInfo,
+        data: Dict[str, Any],
+        duration_ms: int,
+        response: Any,
+    ) -> Dict[str, Any]:
+        usage = self._usage_stats(data)
+        return LMStudioResult(
+            model=model_info.name,
+            response=response,
+            duration_ms=duration_ms,
+            input_tokens=usage["input_tokens"],
+            output_tokens=usage["output_tokens"],
+            raw=data,
+        ).to_dict()
+
+    async def chat(
+        self,
+        message: str,
+        *,
+        history: Optional[List[ChatMessage]] = None,
+        model_name: Optional[str] = None,
+        task_type: str = "chat",
+        tools_required: bool = False,
+    ) -> Dict[str, Any]:
+        model_info = self._select_model(model_name, task_type, tools_required)
+        payload = {
+            "model": model_info.name,
+            "messages": self._serialize_messages(message, history),
+        }
+        data, duration = await self._request_json(self._build_url("/chat/completions"), payload)
+        reply = self._extract_text(data)
+        logger.info(
+            "LM Studio chat completed",
+            extra={"payload": {"model": model_info.name, "duration_ms": duration}},
+        )
+        return self._result_from_payload(model_info, data, duration, reply)
+
+    async def embeddings(self, text: str, *, model_name: Optional[str] = None) -> Dict[str, Any]:
+        model_info = self._select_model(model_name, "embeddings", False)
+        payload = {"model": model_info.name, "input": text}
+        data, duration = await self._request_json(self._build_url("/embeddings"), payload)
+        embedding = self._extract_embedding(data)
+        return self._result_from_payload(model_info, data, duration, embedding)
 
     async def vision(
         self,
+        *,
         image_base64: str,
-        description: str,
-        model: Optional[str] = None,
+        prompt: str,
+        model_name: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """
-        Sends a vision request to LM Studio (OpenAI-compatible vision API).
-
-        Args:
-            image_base64: Base64 encoded image
-            description: Description or prompt for the image
-            model: Optional model name (uses default if not provided)
-
-        Returns:
-            dict: Response from LM Studio
-        """
-        payload: Dict[str, Any] = {
-            "model": model or self.model,
+        model_info = self._select_model(model_name, "vision", False)
+        payload = {
+            "model": model_info.name,
             "messages": [
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": description},
+                        {"type": "text", "text": prompt},
                         {
                             "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{image_base64}",
-                            },
+                            "image_url": {"url": f"data:image/png;base64,{image_base64}"},
                         },
                     ],
-                },
+                }
             ],
         }
-
-        headers: Dict[str, str] = {"Content-Type": "application/json"}
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
-
-        logger.info("Sending vision request to LM Studio...")
-        try:
-            client = await self._get_client()
-            response = await client.post(self.base_url, json=payload, headers=headers)
-            response.raise_for_status()
-            data = response.json()
-            logger.info("Received vision response from LM Studio")
-            return data
-        except httpx.HTTPStatusError as exc:
-            logger.error("Vision API error: %s", exc)
-            raise
-        except Exception as exc:  # noqa: BLE001
-            logger.error("Error in vision request: %s", exc)
-            raise
+        data, duration = await self._request_json(
+            self._build_url("/chat/completions"),
+            payload,
+            timeout=settings.stream_timeout_seconds,
+        )
+        reply = self._extract_text(data)
+        return self._result_from_payload(model_info, data, duration, reply)
 
     async def stream_chat(
-        self, message: str, history: Optional[List[ChatMessage]] = None
-    ) -> Any:
-        """
-        Streams a chat-completion request to LM Studio (OpenAI-compatible streaming).
-
-        Args:
-            message: User message
-            history: Optional conversation history
-
-        Yields:
-            dict: Streaming chunks with 'chunk' and 'done' keys
-        """
-        # Use provided model or default
-        model_to_use = model or self.model
-
-        payload: Dict[str, Any] = {
-            "model": model_to_use,
-            "messages": [],
+        self,
+        message: str,
+        *,
+        history: Optional[List[ChatMessage]] = None,
+        model_name: Optional[str] = None,
+        task_type: str = "chat",
+        tools_required: bool = False,
+    ) -> AsyncGenerator[Dict[str, Any], None]:
+        model_info = self._select_model(model_name, task_type, tools_required)
+        payload = {
+            "model": model_info.name,
+            "messages": self._serialize_messages(message, history),
             "stream": True,
         }
+        headers = self._headers()
+        url = self._build_url("/chat/completions")
+        client = await self._get_client()
+        start = time.perf_counter()
 
-        if history:
-            payload["messages"].extend(
-                [m.model_dump() if hasattr(m, "model_dump") else m.dict() for m in history]
-            )
-
-        payload["messages"].append({"role": "user", "content": message})
-
-        headers: Dict[str, str] = {"Content-Type": "application/json"}
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
-
-        logger.info("Sending streaming request to LM Studio...")
         try:
-            client = await self._get_client()
-            async with client.stream("POST", self.base_url, json=payload, headers=headers) as response:
-                    response.raise_for_status()
-                    async for line in response.aiter_lines():
-                        if not line.strip() or line.startswith("data: [DONE]"):
+            async with client.stream(
+                "POST",
+                url,
+                json=payload,
+                headers=headers,
+                timeout=settings.stream_timeout_seconds,
+            ) as response:
+                response.raise_for_status()
+                async for line in response.aiter_lines():
+                    if not line or line.startswith(":"):
+                        continue
+                    if line.strip().startswith("data: [DONE]"):
+                        yield {
+                            "model": model_info.name,
+                            "provider": "lmstudio",
+                            "duration_ms": int((time.perf_counter() - start) * 1000),
+                            "input_tokens": 0,
+                            "output_tokens": 0,
+                            "response": "",
+                            "done": True,
+                        }
+                        break
+                    if line.startswith("data: "):
+                        try:
+                            payload_json = json.loads(line[6:])
+                        except json.JSONDecodeError:
                             continue
-                        if line.startswith("data: "):
-                            try:
-                                import json
-
-                                data = json.loads(line[6:])  # Remove "data: " prefix
-                                if "choices" in data and len(data["choices"]) > 0:
-                                    delta = data["choices"][0].get("delta", {})
-                                    content = delta.get("content", "")
-                                    if content:
-                                        yield {"chunk": content, "done": False}
-                                    # Check if this is the final chunk
-                                    if data["choices"][0].get("finish_reason"):
-                                        yield {"chunk": "", "done": True}
-                                        break
-                            except Exception as exc:  # noqa: BLE001
-                                logger.warning("Error parsing streaming chunk: %s", exc)
-                                continue
+                        delta = payload_json.get("choices", [{}])[0].get("delta", {})
+                        content = delta.get("content")
+                        if content:
+                            yield {
+                                "model": model_info.name,
+                                "provider": "lmstudio",
+                                "duration_ms": int((time.perf_counter() - start) * 1000),
+                                "input_tokens": 0,
+                                "output_tokens": 0,
+                                "response": content,
+                                "done": False,
+                            }
         except httpx.HTTPStatusError as exc:
-            logger.error("Streaming API error: %s", exc)
-            raise
-        except Exception as exc:  # noqa: BLE001
-            logger.error("Error in streaming request: %s", exc)
-            raise
+            raise LMStudioClientError("LM Studio streaming error", status=exc.response.status_code) from exc
+        except httpx.RequestError as exc:
+            raise LMStudioClientError("LM Studio streaming connection error") from exc
 
     @staticmethod
-    def extract_reply(data: Dict[str, Any]) -> str:
-        """
-        Extracts assistant reply text from OpenAI-style response.
-        """
+    def _extract_text(data: Dict[str, Any]) -> str:
         try:
-            return data["choices"][0]["message"]["content"]
-        except Exception as exc:  # noqa: BLE001
-            logger.error("Failed to extract reply: %s", exc)
-            return "Sorry, I had an issue extracting the model response."
+            return data["choices"][0]["message"]["content"].strip()
+        except (KeyError, IndexError, AttributeError):
+            return ""
+
+    @staticmethod
+    def _extract_embedding(data: Dict[str, Any]) -> List[float]:
+        try:
+            return data["data"][0]["embedding"]
+        except (KeyError, IndexError, TypeError):
+            return []
 

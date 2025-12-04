@@ -1,82 +1,56 @@
-"""Tests for vision endpoint integration."""
-
 from __future__ import annotations
 
-import base64
+from pathlib import Path
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from fastapi.testclient import TestClient
-from unittest.mock import AsyncMock, MagicMock, patch
 
-from app.main import app
-from app.services.lmstudio_client import LMStudioClient
-
-client = TestClient(app)
+from app.services import model_registry, vision_service
+from app.services.model_registry import ModelInfo
 
 
-class TestVisionEndpoint:
-    """Test suite for vision endpoint."""
+@pytest.fixture
+def fake_model(tmp_path: Path) -> ModelInfo:
+    return ModelInfo(
+        name="qwen3-vision-mlx",
+        category="vision",
+        model_path=tmp_path / "model",
+        format="mlx",
+        quantization="full",
+        max_context=65536,
+        supports_vision=True,
+    )
 
-    def test_vision_without_image(self):
-        """Test vision endpoint without image."""
-        response = client.post(
-            "/vision/analyze",
-            json={"description": "Test description", "source": "test"},
-        )
-        assert response.status_code == 200
-        data = response.json()
-        assert "summary" in data
-        assert "No image provided" in data["summary"]
 
-    def test_vision_with_base64_image(self):
-        """Test vision endpoint with base64 image."""
-        # Create a simple test image (1x1 pixel PNG)
-        test_image_data = base64.b64encode(b"fake image data").decode("utf-8")
+@pytest.fixture(autouse=True)
+def _mock_registry(monkeypatch, fake_model):
+    monkeypatch.setattr(model_registry, "resolve_model", lambda name: fake_model)
+    monkeypatch.setattr(model_registry, "get_default_model", lambda task: fake_model)
 
-        response = client.post(
-            "/vision/analyze",
-            json={
-                "description": "What is in this image?",
-                "image_base64": test_image_data,
-                "source": "test",
-            },
-        )
-        assert response.status_code == 200
-        data = response.json()
-        assert "summary" in data
-        assert "details" in data
 
-    @pytest.mark.asyncio
-    async def test_vision_client_method(self):
-        """Test LMStudioClient.vision method."""
-        mock_response = MagicMock()
-        mock_response.json.return_value = {
-            "choices": [{"message": {"content": "Test vision response"}}],
-        }
-        mock_response.raise_for_status = MagicMock()
+@pytest.mark.asyncio
+async def test_analyze_image_calls_lmstudio(monkeypatch):
+    fake_result = {
+        "model": "qwen3-vision-mlx",
+        "provider": "lmstudio",
+        "duration_ms": 1,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "response": "ok",
+    }
+    dummy_client = MagicMock()
+    dummy_client.vision = AsyncMock(return_value=fake_result)
+    monkeypatch.setattr(vision_service, "_CLIENT", dummy_client)
 
-        client_instance = LMStudioClient()
+    image = b"\x89PNG"
+    result = await vision_service.analyze_image(image, "describe this")
 
-        with patch("httpx.AsyncClient.post", new_callable=AsyncMock) as mock_post:
-            mock_post.return_value = mock_response
-            result = await client_instance.vision(
-                image_base64="test_base64",
-                description="Test description",
-            )
+    dummy_client.vision.assert_awaited()
+    assert result["response"] == "ok"
+    assert result["model"] == "qwen3-vision-mlx"
 
-        assert "choices" in result
 
-    def test_vision_with_url(self):
-        """Test vision endpoint with URL."""
-        response = client.post(
-            "/vision/analyze",
-            json={
-                "description": "Test description",
-                "image_url": "https://example.com/image.jpg",
-                "source": "test",
-            },
-        )
-        assert response.status_code == 200
-        data = response.json()
-        assert "summary" in data
-
+@pytest.mark.asyncio
+async def test_analyze_image_requires_bytes():
+    with pytest.raises(ValueError):
+        await vision_service.analyze_image(b"", "prompt")

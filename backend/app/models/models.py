@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ChatMessage(BaseModel):
@@ -37,16 +37,21 @@ class VisionResponse(BaseModel):
 
 
 class TaskRequest(BaseModel):
-    task_name: str
-    params: Dict[str, Any] = {}
+    type: str = Field(..., alias="task_name")
+    args: Dict[str, Any] = Field(default_factory=dict, alias="params")
+    timeout: Optional[int] = None
     source: str = "shortcuts"
     metadata: Optional[Dict[str, Any]] = None
 
+    model_config = ConfigDict(populate_by_name=True)
+
 
 class TaskResult(BaseModel):
+    task: str
     success: bool
-    message: str
-    data: Optional[Dict[str, Any]] = None
+    duration_ms: int
+    payload: Optional[Dict[str, Any]] = None
+    error: Optional[str] = None
 
 
 # Conversation models

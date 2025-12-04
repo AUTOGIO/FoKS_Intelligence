@@ -1,0 +1,42 @@
+[
+  {
+    "id": "fbp-inject",
+    "type": "inject",
+    "z": "fbp-flow-1",
+    "name": "Trigger FBP Health",
+    "props": [],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 200,
+    "y": 300,
+    "wires": [["fbp-http"]]
+  },
+  {
+    "id": "fbp-http",
+    "type": "http request",
+    "z": "fbp-flow-1",
+    "name": "GET /health",
+    "method": "GET",
+    "ret": "obj",
+    "url": "http://127.0.0.1:8000/health",
+    "tls": "",
+    "x": 440,
+    "y": 300,
+    "wires": [["fbp-debug"]]
+  },
+  {
+    "id": "fbp-debug",
+    "type": "debug",
+    "z": "fbp-flow-1",
+    "name": "FBP Health Response",
+    "active": true,
+    "tosidebar": true,
+    "x": 720,
+    "y": 300,
+    "wires": []
+  }
+]
+
+

@@ -1,0 +1,30 @@
+{
+  "Profiles": [
+    {
+      "Guid": "lmstudio-ops-terminal-0001-0000-0000-000000000001",
+      "Name": "LM Studio Model Manager",
+      "Badge Text": "LM Studio Ops",
+      "Use Custom Badge": true,
+      "Working Directory": "$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence",
+      "Custom Command": "Yes",
+      "Command": "/bin/zsh -lc 'while true; do echo \"===== LM Studio Models @ $(date) =====\"; curl -s http://localhost:1234/v1/models || echo \"LM Studio offline or not reachable\"; echo \"\"; sleep 5; done'",
+      "Tab Color": {
+        "Red Component": 0.2,
+        "Green Component": 0.8,
+        "Blue Component": 0.2
+      },
+      "Foreground Color": {
+        "Red Component": 0.8,
+        "Green Component": 1.0,
+        "Blue Component": 0.8
+      },
+      "Background Color": {
+        "Red Component": 0.0,
+        "Green Component": 0.2,
+        "Blue Component": 0.0
+      }
+    }
+  ]
+}
+
+

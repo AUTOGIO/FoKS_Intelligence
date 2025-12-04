@@ -1,0 +1,51 @@
+{
+  "name": "FoKS - Run Task",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "foks/run-task",
+        "options": {}
+      },
+      "id": "http-in-foks",
+      "name": "HTTP In",
+      "type": "n8n-nodes-base.httpTrigger",
+      "typeVersion": 1,
+      "position": [240, 420]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/tasks",
+        "options": {
+          "bodyContentType": "json"
+        }
+      },
+      "id": "http-request-foks",
+      "name": "HTTP Request - FoKS /tasks",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [520, 420]
+    },
+    {
+      "parameters": {
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "http-out-foks",
+      "name": "HTTP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [780, 420]
+    }
+  ],
+  "connections": {
+    "HTTP In": {
+      "main": [[{ "node": "HTTP Request - FoKS /tasks", "type": "main", "index": 0 }]]
+    },
+    "HTTP Request - FoKS /tasks": {
+      "main": [[{ "node": "HTTP Response", "type": "main", "index": 0 }]]
+    }
+  }
+}
+
+

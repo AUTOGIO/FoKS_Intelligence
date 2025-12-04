@@ -1,0 +1,13 @@
+{
+  "name": "Run FoKS Task",
+  "description": "Call FoKS /tasks endpoint with a basic JSON body.",
+  "trigger": "manual",
+  "actions": [
+    {
+      "type": "run_shell_script",
+      "script": "curl -s -X POST 'http://127.0.0.1:8000/tasks' -H 'Content-Type: application/json' -d '{\"job_id\": \"manual-shortcut\", \"payload\": {\"source\": \"mac-shortcut\"}}'"
+    }
+  ]
+}
+
+

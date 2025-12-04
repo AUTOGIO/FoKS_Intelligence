@@ -1,0 +1,21 @@
+{
+  "name": "FoKS+FBP+LMStudio Health Report",
+  "description": "Run all health checks and show a combined report.",
+  "trigger": "manual",
+  "actions": [
+    {
+      "type": "run_shell_script",
+      "script": "/usr/bin/env python3 \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/health/check_foks.py\""
+    },
+    {
+      "type": "run_shell_script",
+      "script": "/usr/bin/env python3 \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/health/check_fbp.py\""
+    },
+    {
+      "type": "run_shell_script",
+      "script": "/usr/bin/env python3 \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/health/check_lmstudio.py\""
+    }
+  ]
+}
+
+

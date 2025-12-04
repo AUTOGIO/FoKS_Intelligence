@@ -1,0 +1,49 @@
+{
+  "name": "FBP - Health Check",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "fbp/health",
+        "options": {}
+      },
+      "id": "http-in-fbp",
+      "name": "HTTP In",
+      "type": "n8n-nodes-base.httpTrigger",
+      "typeVersion": 1,
+      "position": [240, 580]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/health",
+        "options": {}
+      },
+      "id": "http-request-fbp",
+      "name": "HTTP Request - FBP /health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [520, 580]
+    },
+    {
+      "parameters": {
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "http-out-fbp",
+      "name": "HTTP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [780, 580]
+    }
+  ],
+  "connections": {
+    "HTTP In": {
+      "main": [[{ "node": "HTTP Request - FBP /health", "type": "main", "index": 0 }]]
+    },
+    "HTTP Request - FBP /health": {
+      "main": [[{ "node": "HTTP Response", "type": "main", "index": 0 }]]
+    }
+  }
+}
+
+

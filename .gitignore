@@ -28,6 +28,8 @@ backend/htmlcov/
 # Logs
 logs/*
 !logs/.gitkeep
+ops/logs/*
+!ops/logs/.gitkeep
 *.log
 
 # Local data
@@ -43,6 +45,7 @@ backend/config/environments/*.env
 node_modules/
 .vscode/
 .idea/
+.cursor/
 
 # Misc
 *.swp

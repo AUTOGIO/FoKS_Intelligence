@@ -1,0 +1,49 @@
+{
+  "name": "LM Studio - List Models",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "lmstudio/list-models",
+        "options": {}
+      },
+      "id": "http-in-lmstudio",
+      "name": "HTTP In",
+      "type": "n8n-nodes-base.httpTrigger",
+      "typeVersion": 1,
+      "position": [240, 260]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:1234/v1/models",
+        "options": {}
+      },
+      "id": "http-request-lmstudio",
+      "name": "HTTP Request - LM Studio Models",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [520, 260]
+    },
+    {
+      "parameters": {
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "http-out-lmstudio",
+      "name": "HTTP Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [780, 260]
+    }
+  ],
+  "connections": {
+    "HTTP In": {
+      "main": [[{ "node": "HTTP Request - LM Studio Models", "type": "main", "index": 0 }]]
+    },
+    "HTTP Request - LM Studio Models": {
+      "main": [[{ "node": "HTTP Response", "type": "main", "index": 0 }]]
+    }
+  }
+}
+
+

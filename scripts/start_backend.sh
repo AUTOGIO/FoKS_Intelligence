@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-PROJECT_ROOT="/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 BACKEND_DIR="$PROJECT_ROOT/backend"
 VENV_DIR="$BACKEND_DIR/.venv_foks"
 
