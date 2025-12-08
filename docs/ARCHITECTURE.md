@@ -63,7 +63,7 @@ FoKS Intelligence é uma interface global para automação de IA no macOS, otimi
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│              FastAPI Backend (Port 8001)                     │
+│              FastAPI Backend (Port 8000)                     │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │  Middleware Layer                                     │  │
 │  │  - Authentication (API Key)                          │  │
@@ -75,20 +75,27 @@ FoKS Intelligence é uma interface global para automação de IA no macOS, otimi
 │  └──────────────────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │  Router Layer                                         │  │
-│  │  - /chat (chat, stream)                              │  │
-│  │  - /vision/analyze                                   │  │
-│  │  - /tasks/run                                        │  │
+│  │  - /chat                                              │  │
+│  │  - /vision/analyze                                    │  │
+│  │  - /tasks/run                                         │  │
 │  │  - /conversations (CRUD)                             │  │
-│  │  - /system (info, metrics)                           │  │
-│  │  - /metrics (Prometheus)                             │  │
+│  │  - /system (info, recommendations, metrics, db stats)│  │
+│  │  - /metrics (JSON summary, Prometheus)               │  │
 │  └──────────────────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │  Service Layer                                        │  │
 │  │  - LMStudioClient (HTTP pool, retry, circuit breaker)│  │
+│  │  - ChatService (orchestrates chat flow)              │  │
+│  │  - VisionService (image analysis)                     │  │
 │  │  - ConversationStore (DB operations, retry)           │  │
 │  │  - ConversationCache (in-memory, TTL)                 │  │
 │  │  - TaskRunner (macOS automation)                      │  │
 │  │  - Monitoring (metrics collection)                    │  │
+│  │  - FBPClient (external backend integration)           │  │
+│  │  - FBPService (FBP business logic)                    │  │
+│  │  - WebhookService (webhook notifications)             │  │
+│  │  - ModelRegistry (model management)                   │  │
+│  │  - CleanupScheduler (data cleanup)                   │  │
 │  └──────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
          │                              │
@@ -147,7 +154,6 @@ FoKS Intelligence é uma interface global para automação de IA no macOS, otimi
   - HTTP connection pooling (httpx)
   - Retry com exponential backoff
   - Circuit breaker pattern
-  - Streaming support (SSE)
 - **Configuração:** `LMSTUDIO_BASE_URL`, `LMSTUDIO_MODEL`
 
 #### ConversationStore
@@ -217,16 +223,6 @@ FoKS Intelligence é uma interface global para automação de IA no macOS, otimi
 9. Response → Retorna para cliente
 ```
 
-### Streaming Flow
-
-```
-1. Cliente → POST /chat/stream
-2. Middlewares (mesmos do chat)
-3. ChatRouter → Gera SSE stream
-4. LMStudioClient → Stream do LM Studio
-5. Yield chunks → Cliente recebe em tempo real
-6. Salva conversa ao finalizar
-```
 
 ## Segurança
 
@@ -268,7 +264,7 @@ FoKS Intelligence é uma interface global para automação de IA no macOS, otimi
 ```bash
 cd backend
 source .venv_foks/bin/activate
-uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### Produção

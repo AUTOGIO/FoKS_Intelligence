@@ -2,7 +2,7 @@
 
 ## ✅ Status Atual
 
-- ✅ Backend FastAPI rodando na porta **8001**
+- ✅ Backend FastAPI rodando na porta **8000**
 - ✅ Integrado com LM Studio em `http://127.0.0.1:1234`
 - ✅ Todos os endpoints testados e funcionando
 - ✅ Documentação completa criada
@@ -34,7 +34,7 @@ Siga o guia completo em: **[docs/SHORTCUT_SETUP.md](docs/SHORTCUT_SETUP.md)**
 tail -f logs/app.log
 
 # Health check
-curl http://localhost:8001/health
+curl http://localhost:8000/health
 ```
 
 ## 📚 Documentação

@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 ################################################################################
-# FBP Backend Bootstrap Script (M3 Optimized, Best Practices)
+# FBP Backend Bootstrap Script (M3 Optimized)
 # Best practices:
-#  - No daemonization (no nohup); let launchd manage lifecycle
-#  - Explicit logging via launchd StandardOutPath/StandardErrorPath
-#  - uvloop for improved async performance on Apple Silicon
+#  - No daemonization; let launchd manage lifecycle
+#  - Explicit logging via StandardOutPath/StandardErrorPath
+#  - uvloop for improved async performance
 #  - Single worker (1 process) + high async concurrency
-#  - Proper venv detection and setup
-#  - Playwright validation
-#  - Resource limits and monitoring hints
+#  - Health check via /health endpoint
+#  - Proper environment isolation
 ################################################################################
 set -euo pipefail
 
@@ -17,11 +16,12 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 FBP_ROOT="${FBP_ROOT:-"$HOME/Documents/FBP_Backend"}"
 OPS_LOG_DIR="$PROJECT_ROOT/ops/logs"
 PID_FILE="$OPS_LOG_DIR/fbp_backend.pid"
+LOG_FILE="$OPS_LOG_DIR/fbp_boot.log"
 
 mkdir -p "$OPS_LOG_DIR"
 
 ################################################################################
-# Logging utility (all output goes to launchd's StandardOutPath/StandardErrorPath)
+# Logging utility
 ################################################################################
 log() {
   local level="$1"; shift
@@ -35,7 +35,7 @@ log() {
     HINT)  color=$'\033[36m' ;; # cyan
     *)     color=$'\033[0m'  ;;
   esac
-  printf '%s [%s] %s%s%s\n' "$(date '+%Y-%m-%dT%H:%M:%S')" "$level" "$color" "$msg" "$color_reset"
+  printf '%s [%s] %s%s%s\n' "$(date '+%Y-%m-%dT%H:%M:%S')" "$level" "$color" "$msg" "$color_reset" | tee -a "$LOG_FILE"
 }
 
 ################################################################################
@@ -49,7 +49,7 @@ fi
 VENV_PATH="$HOME/Documents/.venvs/fbp"
 if [[ ! -d "$VENV_PATH" ]]; then
   log "ERROR" "FBP virtualenv not found at $VENV_PATH"
-  log "HINT" "Create it with: python3 -m venv \"$VENV_PATH\" && \"$VENV_PATH/bin/pip\" install -e '.[dev]' (run inside $FBP_ROOT)"
+  log "HINT" "Create it with: python3 -m venv \"$VENV_PATH\" && source \"$VENV_PATH/bin/activate\" && cd \"$FBP_ROOT\" && pip install -e '.[dev]'"
   exit 1
 fi
 
@@ -57,26 +57,21 @@ fi
 source "$VENV_PATH/bin/activate"
 
 ################################################################################
-# Dependency checks
+# Check Playwright setup
 ################################################################################
-log "INFO" "Validating FBP dependencies..."
-
-if ! python -c "import uvicorn" 2>/dev/null; then
-  log "WARN" "uvicorn not found; installing..."
-  pip install uvicorn >/dev/null 2>&1 || log "ERROR" "Failed to install uvicorn"
-fi
-
-# Ensure uvloop is installed (for better async performance on M3)
-if ! python -c "import uvloop" 2>/dev/null; then
-  log "INFO" "Installing uvloop for improved async performance on M3"
-  pip install uvloop >/dev/null 2>&1 || log "WARN" "uvloop install failed; FastAPI will use default event loop"
-fi
-
 if command -v playwright >/dev/null 2>&1; then
   pw_version="$(playwright --version 2>/dev/null || true)"
   log "INFO" "Playwright detected ($pw_version)"
 else
   log "WARN" "Playwright CLI not found. Some NFA flows may fail. Run: \"$FBP_ROOT/scripts/setup_playwright.sh\""
+fi
+
+################################################################################
+# Ensure uvloop is installed
+################################################################################
+if ! python -c "import uvloop" 2>/dev/null; then
+  log "INFO" "Installing uvloop for improved async performance on M3"
+  pip install uvloop >/dev/null 2>&1 || log "WARN" "uvloop install failed; FastAPI will use default event loop"
 fi
 
 ################################################################################
@@ -98,26 +93,22 @@ fi
 ################################################################################
 cd "$FBP_ROOT"
 export PYTHONPATH="$FBP_ROOT:${PYTHONPATH:-}"
-
-# M3 optimization hints
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
 
-# Optional: tune uvicorn for M3 (single worker, high async concurrency)
-LOOP_TYPE="uvloop"  # Use uvloop if available (async improvements)
-HTTP_TYPE="auto"    # Let uvicorn auto-detect httptools
-WORKERS=1            # Single worker on local M3 (async handles concurrency)
+# Uvicorn tuning for M3 (single worker, high async concurrency)
+LOOP_TYPE="uvloop"  # Use uvloop if available
+HTTP_TYPE="auto"    # Auto-detect httptools
+WORKERS=1            # Single worker on local M3
 
 log "INFO" "Starting FBP backend with uvicorn on 0.0.0.0:8000"
 log "INFO" "  - Workers: $WORKERS (single process, high async concurrency)"
 log "INFO" "  - Loop: $LOOP_TYPE (Apple Silicon optimized)"
 log "INFO" "  - HTTP: $HTTP_TYPE"
-log "INFO" "  - Working directory: $FBP_ROOT"
-log "INFO" "  - Logs: launchd StandardOutPath / StandardErrorPath (~/Library/Logs/FoKS/)"
+log "INFO" "  - Root directory: $FBP_ROOT"
 
 # Run in foreground (launchd will manage it)
-# Note: We do NOT use nohup; let launchd handle process lifecycle
-"$VENV_PATH/bin/python" -m uvicorn app.main:app \
+"$VENV_PATH/bin/uvicorn" app.main:app \
   --host 0.0.0.0 \
   --port 8000 \
   --workers "$WORKERS" \
@@ -127,6 +118,4 @@ log "INFO" "  - Logs: launchd StandardOutPath / StandardErrorPath (~/Library/Log
   --timeout-notify 30 \
   --access-log
 
-# If we reach here, the process exited; let launchd restart it
-log "WARN" "FBP backend process exited (launchd will restart if KeepAlive is enabled)"
 exit 1

@@ -37,13 +37,13 @@ pip install -r requirements.txt
 ../scripts/start_backend.sh
 
 # Ou diretamente
-uvicorn app.main:app --host 0.0.0.0 --port 8001
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 ### Passo 4: Verificar
 
 ```bash
-curl http://localhost:8001/health
+curl http://localhost:8000/health
 ```
 
 ---
@@ -62,7 +62,7 @@ docker build -t foks-intelligence:latest .
 ```bash
 docker run -d \
   --name foks-backend \
-  -p 8001:8001 \
+  -p 8000:8000 \
   -e FOKS_ENV=production \
   -e LMSTUDIO_BASE_URL=http://host.docker.internal:1234/v1/chat/completions \
   -v $(pwd)/data:/app/data \
@@ -113,10 +113,10 @@ RATE_LIMIT_REQUESTS_PER_MINUTE=60
 
 ```bash
 # Health check básico
-curl http://localhost:8001/health
+curl http://localhost:8000/health
 
 # Métricas
-curl http://localhost:8001/metrics
+curl http://localhost:8000/metrics
 ```
 
 ### Logs
@@ -191,7 +191,7 @@ docker start foks-backend
 
 ```bash
 # Verificar processo
-lsof -i :8001
+lsof -i :8000
 
 # Matar processo
 kill -9 <PID>

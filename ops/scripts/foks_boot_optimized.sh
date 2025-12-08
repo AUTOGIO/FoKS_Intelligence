@@ -1,27 +1,26 @@
 #!/usr/bin/env bash
 ################################################################################
-# FBP Backend Bootstrap Script (M3 Optimized, Best Practices)
+# FoKS Backend Bootstrap Script (M3 Optimized)
 # Best practices:
-#  - No daemonization (no nohup); let launchd manage lifecycle
-#  - Explicit logging via launchd StandardOutPath/StandardErrorPath
-#  - uvloop for improved async performance on Apple Silicon
+#  - No daemonization; let launchd manage lifecycle
+#  - Explicit logging via StandardOutPath/StandardErrorPath
+#  - uvloop for improved async performance
 #  - Single worker (1 process) + high async concurrency
-#  - Proper venv detection and setup
-#  - Playwright validation
-#  - Resource limits and monitoring hints
+#  - Proper PID tracking for watchdog
 ################################################################################
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-FBP_ROOT="${FBP_ROOT:-"$HOME/Documents/FBP_Backend"}"
+BACKEND_DIR="$PROJECT_ROOT/backend"
 OPS_LOG_DIR="$PROJECT_ROOT/ops/logs"
-PID_FILE="$OPS_LOG_DIR/fbp_backend.pid"
+PID_FILE="$OPS_LOG_DIR/foks_backend.pid"
+LOG_FILE="$OPS_LOG_DIR/foks_boot.log"
 
 mkdir -p "$OPS_LOG_DIR"
 
 ################################################################################
-# Logging utility (all output goes to launchd's StandardOutPath/StandardErrorPath)
+# Logging utility
 ################################################################################
 log() {
   local level="$1"; shift
@@ -35,35 +34,34 @@ log() {
     HINT)  color=$'\033[36m' ;; # cyan
     *)     color=$'\033[0m'  ;;
   esac
-  printf '%s [%s] %s%s%s\n' "$(date '+%Y-%m-%dT%H:%M:%S')" "$level" "$color" "$msg" "$color_reset"
+  printf '%s [%s] %s%s%s\n' "$(date '+%Y-%m-%dT%H:%M:%S')" "$level" "$color" "$msg" "$color_reset" | tee -a "$LOG_FILE"
 }
 
 ################################################################################
 # Validation
 ################################################################################
-if [[ ! -d "$FBP_ROOT" ]]; then
-  log "ERROR" "FBP backend directory not found at $FBP_ROOT"
+if [[ ! -d "$BACKEND_DIR" ]]; then
+  log "ERROR" "FoKS backend directory not found at $BACKEND_DIR"
   exit 1
 fi
 
-VENV_PATH="$HOME/Documents/.venvs/fbp"
-if [[ ! -d "$VENV_PATH" ]]; then
-  log "ERROR" "FBP virtualenv not found at $VENV_PATH"
-  log "HINT" "Create it with: python3 -m venv \"$VENV_PATH\" && \"$VENV_PATH/bin/pip\" install -e '.[dev]' (run inside $FBP_ROOT)"
-  exit 1
+VENV_DIR="$BACKEND_DIR/.venv_foks"
+
+if [[ ! -d "$VENV_DIR" ]]; then
+  log "INFO" "Creating FoKS virtualenv at $VENV_DIR"
+  python3 -m venv "$VENV_DIR"
 fi
 
 # shellcheck disable=SC1090
-source "$VENV_PATH/bin/activate"
+source "$VENV_DIR/bin/activate"
 
 ################################################################################
-# Dependency checks
+# Install/upgrade dependencies
 ################################################################################
-log "INFO" "Validating FBP dependencies..."
+log "INFO" "Checking FoKS backend dependencies..."
 
-if ! python -c "import uvicorn" 2>/dev/null; then
-  log "WARN" "uvicorn not found; installing..."
-  pip install uvicorn >/dev/null 2>&1 || log "ERROR" "Failed to install uvicorn"
+if ! pip install --upgrade pip setuptools wheel >/dev/null 2>&1; then
+  log "WARN" "Failed to upgrade pip; continuing"
 fi
 
 # Ensure uvloop is installed (for better async performance on M3)
@@ -72,11 +70,8 @@ if ! python -c "import uvloop" 2>/dev/null; then
   pip install uvloop >/dev/null 2>&1 || log "WARN" "uvloop install failed; FastAPI will use default event loop"
 fi
 
-if command -v playwright >/dev/null 2>&1; then
-  pw_version="$(playwright --version 2>/dev/null || true)"
-  log "INFO" "Playwright detected ($pw_version)"
-else
-  log "WARN" "Playwright CLI not found. Some NFA flows may fail. Run: \"$FBP_ROOT/scripts/setup_playwright.sh\""
+if ! pip install -r "$BACKEND_DIR/requirements.txt" >/dev/null 2>&1; then
+  log "WARN" "Failed to install/update FoKS requirements; proceeding"
 fi
 
 ################################################################################
@@ -85,10 +80,10 @@ fi
 if [[ -f "$PID_FILE" ]]; then
   existing_pid="$(cat "$PID_FILE" 2>/dev/null || true)"
   if [[ -n "${existing_pid:-}" ]] && ps -p "$existing_pid" >/dev/null 2>&1; then
-    log "INFO" "FBP backend already running with PID $existing_pid"
+    log "INFO" "FoKS backend already running with PID $existing_pid"
     exit 0
   else
-    log "WARN" "Removing stale FBP PID file at $PID_FILE"
+    log "WARN" "Removing stale FoKS PID file at $PID_FILE"
     rm -f "$PID_FILE"
   fi
 fi
@@ -96,8 +91,8 @@ fi
 ################################################################################
 # Environment setup
 ################################################################################
-cd "$FBP_ROOT"
-export PYTHONPATH="$FBP_ROOT:${PYTHONPATH:-}"
+cd "$BACKEND_DIR"
+export PYTHONPATH="$BACKEND_DIR:${PYTHONPATH:-}"
 
 # M3 optimization hints
 export PYTHONUNBUFFERED=1
@@ -108,16 +103,13 @@ LOOP_TYPE="uvloop"  # Use uvloop if available (async improvements)
 HTTP_TYPE="auto"    # Let uvicorn auto-detect httptools
 WORKERS=1            # Single worker on local M3 (async handles concurrency)
 
-log "INFO" "Starting FBP backend with uvicorn on 0.0.0.0:8000"
+log "INFO" "Starting FoKS backend with uvicorn on 0.0.0.0:8000"
 log "INFO" "  - Workers: $WORKERS (single process, high async concurrency)"
 log "INFO" "  - Loop: $LOOP_TYPE (Apple Silicon optimized)"
 log "INFO" "  - HTTP: $HTTP_TYPE"
-log "INFO" "  - Working directory: $FBP_ROOT"
-log "INFO" "  - Logs: launchd StandardOutPath / StandardErrorPath (~/Library/Logs/FoKS/)"
 
 # Run in foreground (launchd will manage it)
-# Note: We do NOT use nohup; let launchd handle process lifecycle
-"$VENV_PATH/bin/python" -m uvicorn app.main:app \
+"$VENV_DIR/bin/python" -m uvicorn app.main:app \
   --host 0.0.0.0 \
   --port 8000 \
   --workers "$WORKERS" \
@@ -127,6 +119,4 @@ log "INFO" "  - Logs: launchd StandardOutPath / StandardErrorPath (~/Library/Log
   --timeout-notify 30 \
   --access-log
 
-# If we reach here, the process exited; let launchd restart it
-log "WARN" "FBP backend process exited (launchd will restart if KeepAlive is enabled)"
 exit 1

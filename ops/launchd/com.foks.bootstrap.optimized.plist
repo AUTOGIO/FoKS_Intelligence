@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <!-- Unique label for this launch agent -->
+    <key>Label</key>
+    <string>com.foks.bootstrap</string>
+
+    <!-- Program and arguments (no daemonization; let launchd manage lifecycle) -->
+    <key>ProgramArguments</key>
+    <array>
+      <string>/bin/bash</string>
+      <string>-lc</string>
+      <string>/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/scripts/foks_boot_optimized.sh</string>
+    </array>
+
+    <!-- Working directory for the process -->
+    <key>WorkingDirectory</key>
+    <string>/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence</string>
+
+    <!-- Start at user login -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Keep alive: restart if it exits unexpectedly -->
+    <key>KeepAlive</key>
+    <dict>
+      <!-- Don't restart if the process exited successfully -->
+      <key>SuccessfulExit</key>
+      <false/>
+    </dict>
+
+    <!-- Process management: give it 30s to shut down gracefully -->
+    <key>ExitTimeOut</key>
+    <integer>30</integer>
+
+    <!-- Limit number of restart attempts to avoid rapid restart loops -->
+    <key>ThrottleInterval</key>
+    <integer>5</integer>
+
+    <!-- Explicit logging paths (best practice for macOS 15+) -->
+    <!-- These replace manual file handling in the script -->
+    <key>StandardOutPath</key>
+    <string>/Users/dnigga/Library/Logs/FoKS/com.foks.bootstrap.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/dnigga/Library/Logs/FoKS/com.foks.bootstrap.err.log</string>
+
+    <!-- Optional: environment variables for M3 optimization -->
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>PYTHONUNBUFFERED</key>
+      <string>1</string>
+      <key>PYTHONDONTWRITEBYTECODE</key>
+      <string>1</string>
+      <!-- LM Studio connection (from FoKS config, but can override here if needed) -->
+      <!-- <key>LMSTUDIO_BASE_URL</key> -->
+      <!-- <string>http://127.0.0.1:1234</string> -->
+    </dict>
+
+    <!-- Resource limits for Apple Silicon M3 (16 GB RAM, 8 cores: 4P+4E) -->
+    <!-- Soft limits (can be exceeded temporarily) -->
+    <key>SoftResourceLimits</key>
+    <dict>
+      <!-- Max CPU seconds: generous for background service -->
+      <key>CPU</key>
+      <integer>3600</integer>
+      <!-- Max file size: 1 GB (for logs, temp files) -->
+      <key>FileSize</key>
+      <integer>1073741824</integer>
+      <!-- Max memory: ~2 GB (async concurrency, shared with FBP) -->
+      <key>Memory</key>
+      <integer>2147483648</integer>
+      <!-- Max open files: 1024 (enough for async I/O) -->
+      <key>OpenFiles</key>
+      <integer>1024</integer>
+    </dict>
+
+    <!-- Umask: restrictive file creation (user read/write only) -->
+    <key>Umask</key>
+    <integer>0077</integer>
+
+  </dict>
+</plist>

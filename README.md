@@ -18,7 +18,7 @@ It follows the `project-name_autogio` convention and implements a protected Fast
 
 High‑level components:
 
-- **FoKS Backend** – FastAPI service under `backend/app/`, exposes `/chat`, `/vision/analyze`, `/tasks`, `/system`, `/metrics`.  
+- **FoKS Backend** – FastAPI service under `backend/app/`, exposes `/chat`, `/vision/analyze`, `/tasks`, `/conversations`, `/system`, `/metrics`.  
 - **LM Studio** – local LLM server (OpenAI‑compatible API) on `http://127.0.0.1:1234`.  
 - **Task Runner** – macOS automation layer (open URL, run scripts, TTS, notifications, clipboard, screenshots, apps).  
 - **FBP Backend** – external automation backend (`~/Documents/FBP_Backend`) used for NFA/REDESIM flows.  
@@ -155,7 +155,7 @@ The `ops/` folder contains the **FoKS Ops Environment**:
   - `lmstudio_watch.sh` – continuous LM Studio availability checks.
   - `kill_all.sh` – stop FoKS, FBP, watchers and clear stale PIDs.
 - `ops/health/`
-  - `check_foks.py` – checks `/health`, `/system/status`, `/metrics`.
+  - `check_foks.py` – checks `/health`, `/system/info`, `/metrics`.
   - `check_fbp.py` – robust health check with Google/Gmail dependency hints.
   - `check_lmstudio.py` – verifies `/v1/models` and streaming support.
 - `ops/monitors/`
@@ -198,13 +198,16 @@ Veja também `docs/PRODUCTION_CHECKLIST.md` e `docs/PRODUCTION_90_PERCENT.md` pa
 ## Automation Integrations
 
 - **macOS Shortcuts**  
-  - FoKS Shortcut → POST para `/chat`, `/vision/analyze` ou `/tasks/run`.  
+  - FoKS Shortcut → POST para `/chat`, `/vision/analyze`, `/tasks/run` ou `/conversations`.  
   - Detalhes em `docs/SHORTCUT_SETUP.md` e `ops/shortcuts/*.shortcut.json`.
 
 - **n8n / Node‑RED**  
   - Use nodes HTTP apontando para:
     - `POST http://127.0.0.1:8000/chat`
     - `POST http://127.0.0.1:8000/tasks`
+    - `GET  http://127.0.0.1:8000/conversations`
+    - `GET  http://127.0.0.1:8000/metrics`
+    - `GET  http://127.0.0.1:8000/system/info`
     - `GET  http://127.0.0.1:8000/health`  
   - Exemplos:
     - Node‑RED: `ops/nodered/*.json`

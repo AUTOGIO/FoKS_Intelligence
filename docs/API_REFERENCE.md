@@ -2,7 +2,7 @@
 
 Documentação completa dos endpoints da API.
 
-**Base URL**: `http://localhost:8001`
+**Base URL**: `http://localhost:8000`
 
 ---
 
@@ -75,7 +75,7 @@ Envia uma mensagem para o LM Studio e retorna a resposta do modelo.
 
 **Exemplo cURL:**
 ```bash
-curl -X POST http://localhost:8001/chat/ \
+curl -X POST http://localhost:8000/chat/ \
   -H "Content-Type: application/json" \
   -d '{
     "message": "Olá!",
@@ -298,13 +298,347 @@ Abre aplicativo macOS.
 
 **Exemplo cURL:**
 ```bash
-curl -X POST http://localhost:8001/tasks/run \
+curl -X POST http://localhost:8000/tasks/run \
   -H "Content-Type: application/json" \
   -d '{
     "task_name": "say",
     "params": {"text": "Teste"},
     "source": "test"
   }'
+```
+
+---
+
+## 🔹 Conversations Endpoints
+
+### `POST /conversations/`
+
+Cria uma nova conversa.
+
+**Request Body:**
+```json
+{
+    "user_id": "user123",
+    "title": "Minha Conversa",
+    "source": "shortcuts"
+}
+```
+
+**Campos:**
+- `user_id` (string, obrigatório): Identificador do usuário
+- `title` (string, opcional): Título da conversa
+- `source` (string, opcional): Origem da conversa
+
+**Response:**
+```json
+{
+    "id": 1,
+    "user_id": "user123",
+    "title": "Minha Conversa",
+    "source": "shortcuts",
+    "created_at": "2024-01-01T12:00:00",
+    "updated_at": "2024-01-01T12:00:00",
+    "message_count": 0
+}
+```
+
+### `GET /conversations/`
+
+Lista conversas de um usuário.
+
+**Query Parameters:**
+- `user_id` (string, obrigatório): Identificador do usuário
+- `limit` (int, opcional): Número máximo de conversas (padrão: 50, máximo: 100)
+- `offset` (int, opcional): Offset para paginação (padrão: 0)
+
+**Response:**
+```json
+{
+    "conversations": [
+        {
+            "id": 1,
+            "user_id": "user123",
+            "title": "Minha Conversa",
+            "source": "shortcuts",
+            "created_at": "2024-01-01T12:00:00",
+            "updated_at": "2024-01-01T12:00:00",
+            "message_count": 5
+        }
+    ],
+    "total": 10,
+    "limit": 50,
+    "offset": 0
+}
+```
+
+### `GET /conversations/{conversation_id}`
+
+Obtém uma conversa específica por ID.
+
+**Query Parameters:**
+- `user_id` (string, opcional): Identificador do usuário para validação
+
+**Response:**
+```json
+{
+    "id": 1,
+    "user_id": "user123",
+    "title": "Minha Conversa",
+    "source": "shortcuts",
+    "created_at": "2024-01-01T12:00:00",
+    "updated_at": "2024-01-01T12:00:00",
+    "message_count": 5
+}
+```
+
+### `GET /conversations/{conversation_id}/messages`
+
+Obtém todas as mensagens de uma conversa.
+
+**Query Parameters:**
+- `user_id` (string, opcional): Identificador do usuário para validação
+
+**Response:**
+```json
+[
+    {
+        "id": 1,
+        "conversation_id": 1,
+        "role": "user",
+        "content": "Olá!",
+        "created_at": "2024-01-01T12:00:00"
+    },
+    {
+        "id": 2,
+        "conversation_id": 1,
+        "role": "assistant",
+        "content": "Olá! Como posso ajudar?",
+        "created_at": "2024-01-01T12:00:05"
+    }
+]
+```
+
+### `DELETE /conversations/{conversation_id}`
+
+Deleta uma conversa.
+
+**Query Parameters:**
+- `user_id` (string, opcional): Identificador do usuário para validação
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Conversation 1 deleted"
+}
+```
+
+### `PATCH /conversations/{conversation_id}/title`
+
+Atualiza o título de uma conversa.
+
+**Query Parameters:**
+- `title` (string, obrigatório): Novo título da conversa
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Conversation 1 title updated"
+}
+```
+
+### `GET /conversations/{conversation_id}/export`
+
+Exporta uma conversa em formato JSON ou JSONL.
+
+**Query Parameters:**
+- `user_id` (string, opcional): Identificador do usuário para validação
+- `format` (string, opcional): Formato de exportação (`json` ou `jsonl`, padrão: `json`)
+
+**Response:**
+- JSON: Retorna objeto JSON completo com conversa e mensagens
+- JSONL: Retorna linhas JSONL (uma por linha)
+
+**Exemplo cURL:**
+```bash
+# Criar conversa
+curl -X POST http://localhost:8000/conversations/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_id": "user123",
+    "title": "Nova Conversa"
+  }'
+
+# Listar conversas
+curl "http://localhost:8000/conversations/?user_id=user123&limit=10"
+
+# Exportar conversa
+curl "http://localhost:8000/conversations/1/export?format=json"
+```
+
+---
+
+## 🔹 Metrics Endpoints
+
+### `GET /metrics`
+
+Retorna métricas resumidas da aplicação em formato JSON.
+
+**Response:**
+```json
+{
+    "total_requests": 150,
+    "successful_requests": 145,
+    "failed_requests": 5,
+    "avg_response_time_ms": 250.5,
+    "total_tasks": 30,
+    "successful_tasks": 28,
+    "failed_tasks": 2,
+    "uptime_seconds": 3600,
+    "uptime_formatted": "1h 0m 0s"
+}
+```
+
+### `GET /metrics/prometheus`
+
+Retorna métricas no formato Prometheus (text/plain).
+
+**Response:**
+```
+# HELP foks_requests_total Total number of requests
+# TYPE foks_requests_total counter
+foks_requests_total 150
+
+# HELP foks_requests_success_total Total successful requests
+# TYPE foks_requests_success_total counter
+foks_requests_success_total 145
+
+# HELP foks_requests_failure_total Total failed requests
+# TYPE foks_requests_failure_total counter
+foks_requests_failure_total 5
+
+# HELP foks_response_time_seconds Average response time
+# TYPE foks_response_time_seconds gauge
+foks_response_time_seconds 0.2505
+
+# HELP foks_tasks_total Total tasks executed
+# TYPE foks_tasks_total counter
+foks_tasks_total 30
+
+# HELP foks_tasks_success_total Total successful tasks
+# TYPE foks_tasks_success_total counter
+foks_tasks_success_total 28
+
+# HELP foks_uptime_seconds Application uptime
+# TYPE foks_uptime_seconds gauge
+foks_uptime_seconds 3600
+```
+
+**Exemplo cURL:**
+```bash
+# Métricas JSON
+curl http://localhost:8000/metrics
+
+# Métricas Prometheus
+curl http://localhost:8000/metrics/prometheus
+```
+
+---
+
+## 🔹 System Endpoints
+
+### `GET /system/info`
+
+Retorna informações detalhadas do sistema, incluindo informações específicas do hardware M3.
+
+**Response:**
+```json
+{
+    "python_version": "3.11.0",
+    "python_version_info": {
+        "major": 3,
+        "minor": 11,
+        "micro": 0
+    },
+    "platform": "macOS-14.0-arm64",
+    "system": "Darwin",
+    "processor": "arm",
+    "architecture": ("64bit", ""),
+    "machine": "arm64",
+    "app_version": "1.3.0",
+    "app_name": "FoKS Intelligence Global Interface",
+    "environment": "development",
+    "is_apple_silicon": true,
+    "is_m3": true,
+    "cpu_cores": 10,
+    "memory_gb": 16
+}
+```
+
+### `GET /system/recommendations`
+
+Retorna recomendações de configuração de modelo baseadas no hardware M3.
+
+**Response:**
+```json
+{
+    "recommended_model": "qwen2.5-14b",
+    "max_tokens": 2048,
+    "temperature": 0.7,
+    "reason": "M3 hardware detected with 16GB memory"
+}
+```
+
+### `GET /system/metrics`
+
+Alias para `/metrics` - retorna as mesmas métricas da aplicação.
+
+**Response:**
+```json
+{
+    "requests": {
+        "total": 150,
+        "success": 145,
+        "failures": 5,
+        "avg_response_time_ms": 250.5
+    },
+    "tasks": {
+        "total": 30,
+        "success": 28,
+        "failures": 2
+    },
+    "uptime_seconds": 3600,
+    "uptime_formatted": "1h 0m 0s"
+}
+```
+
+### `GET /system/database/stats`
+
+Retorna estatísticas do banco de dados.
+
+**Response:**
+```json
+{
+    "database_type": "sqlite",
+    "database_path": "/path/to/database.db",
+    "size_bytes": 1048576,
+    "size_formatted": "1.0 MB",
+    "conversations_count": 50,
+    "messages_count": 500
+}
+```
+
+**Exemplo cURL:**
+```bash
+# Informações do sistema
+curl http://localhost:8000/system/info
+
+# Recomendações de modelo
+curl http://localhost:8000/system/recommendations
+
+# Estatísticas do banco
+curl http://localhost:8000/system/database/stats
 ```
 
 ---

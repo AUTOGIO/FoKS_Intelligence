@@ -93,7 +93,7 @@ activate_venv() {
 configure_environment() {
   log_section "Configuring environment variables"
 
-  export FOKS_PORT="${FOKS_PORT:-8080}"
+  export FOKS_PORT="${FOKS_PORT:-8000}"
   export FBP_PORT="${FBP_PORT:-9500}"
   export LMSTUDIO_PORT="${LMSTUDIO_PORT:-1234}"
 

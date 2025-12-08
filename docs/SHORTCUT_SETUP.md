@@ -4,7 +4,7 @@ Este guia mostra como criar o atalho macOS que conecta com o backend FoKS Intell
 
 ## 📋 Pré-requisitos
 
-- ✅ Backend FoKS rodando em `http://localhost:8001`
+- ✅ Backend FoKS rodando em `http://localhost:8000`
 - ✅ LM Studio ativo e servidor OpenAI-compatible rodando
 - ✅ App **Atalhos** (Shortcuts) instalado no macOS
 
@@ -59,7 +59,7 @@ Dentro do campo `metadata`, crie outro dicionário com:
 
 1. Busque a ação: **"Obter Conteúdo de URL"** (Get Contents of URL)
 2. Configure:
-   - **URL**: `http://localhost:8001/chat/`
+   - **URL**: `http://localhost:8000/chat/`
    - **Método**: `POST`
    - **Cabeçalhos**: Adicionar novo cabeçalho
      - **Nome**: `Content-Type`
@@ -120,7 +120,7 @@ FoKS Intelligence
 │       ├── device → "iMac_M3"
 │       └── shortcut_name → "FoKS Intelligence"
 ├── Obter Conteúdo de URL
-│   ├── URL: http://localhost:8001/chat/
+│   ├── URL: http://localhost:8000/chat/
 │   ├── Método: POST
 │   ├── Cabeçalho: Content-Type: application/json
 │   └── Corpo: Payload (JSON)
@@ -147,8 +147,8 @@ FoKS Intelligence
 ## 🔧 Troubleshooting
 
 ### Erro: "Não foi possível conectar"
-- Verifique se o backend está rodando: `curl http://localhost:8001/health`
-- Confirme que a porta está correta (8001, não 8000)
+- Verifique se o backend está rodando: `curl http://localhost:8000/health`
+- Confirme que a porta está correta (8000)
 
 ### Erro: "400 Bad Request"
 - Verifique se o JSON está correto

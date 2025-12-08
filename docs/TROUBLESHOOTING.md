@@ -31,7 +31,7 @@ Este guia cobre problemas comuns e soluções para o FoKS Intelligence.
    # Reinicie o backend
    cd backend
    source .venv_foks/bin/activate
-   uvicorn app.main:app --host 0.0.0.0 --port 8001
+   uvicorn app.main:app --host 0.0.0.0 --port 8000
    ```
 
 ### 2. Erro de autenticação (401 Unauthorized)
@@ -43,7 +43,7 @@ Este guia cobre problemas comuns e soluções para o FoKS Intelligence.
 **Soluções:**
 1. Se `API_KEY` estiver configurado, inclua no header:
    ```bash
-   curl -H "X-API-Key: sua-chave-aqui" http://localhost:8001/chat/
+   curl -H "X-API-Key: sua-chave-aqui" http://localhost:8000/chat/
    ```
 
 2. Para desenvolvimento, remova `API_KEY` do ambiente ou não configure
@@ -174,7 +174,7 @@ Este guia cobre problemas comuns e soluções para o FoKS Intelligence.
    ```bash
    curl -N -H "Content-Type: application/json" \
      -d '{"message":"test"}' \
-     http://localhost:8001/chat/stream
+     http://localhost:8000/chat/
    ```
 
 3. Verifique timeout:
@@ -200,7 +200,7 @@ tail -f logs/app.log
 
 Sempre verifique o health check primeiro:
 ```bash
-curl http://localhost:8001/health | jq
+curl http://localhost:8000/health | jq
 ```
 
 Verifique:
@@ -212,7 +212,7 @@ Verifique:
 
 Verifique métricas para entender o comportamento:
 ```bash
-curl http://localhost:8001/metrics | jq
+curl http://localhost:8000/metrics | jq
 ```
 
 Métricas importantes:
@@ -225,15 +225,15 @@ Métricas importantes:
 
 ```bash
 # Health
-curl http://localhost:8001/health
+curl http://localhost:8000/health
 
 # Chat (requer LM Studio)
-curl -X POST http://localhost:8001/chat/ \
+curl -X POST http://localhost:8000/chat/ \
   -H "Content-Type: application/json" \
   -d '{"message":"test"}'
 
 # Conversas
-curl http://localhost:8001/conversations/?user_id=test
+curl http://localhost:8000/conversations/?user_id=test
 ```
 
 ## Logs Importantes para Análise
