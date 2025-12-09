@@ -162,11 +162,23 @@ fi
 
 echo ""
 echo "=== FBP Backend Health ==="
-if curl --silent --max-time 2 http://127.0.0.1:8001/health >/dev/null 2>&1; then
-  echo_success "FBP backend is responding on port 8001"
-  curl --silent http://127.0.0.1:8001/health | jq . 2>/dev/null || echo "(health endpoint returned data)"
+FBP_TRANSPORT="${FBP_TRANSPORT:-socket}"
+FBP_SOCKET_PATH="${FBP_SOCKET_PATH:-/tmp/fbp.sock}"
+FBP_PORT="${FBP_PORT:-8001}"
+if [[ "$FBP_TRANSPORT" == "socket" ]]; then
+  if curl --silent --max-time 2 --unix-socket "$FBP_SOCKET_PATH" http://localhost/socket-health >/dev/null 2>&1; then
+    echo_success "FBP backend is responding via UNIX socket ($FBP_SOCKET_PATH)"
+    curl --silent --unix-socket "$FBP_SOCKET_PATH" http://localhost/socket-health | jq . 2>/dev/null || echo "(health endpoint returned data)"
+  else
+    echo_warn "FBP backend not yet responding via socket $FBP_SOCKET_PATH (may still be starting)"
+  fi
 else
-  echo_warn "FBP backend not yet responding on port 8001 (may still be starting or on port 8000)"
+  if curl --silent --max-time 2 "http://127.0.0.1:${FBP_PORT}/socket-health" >/dev/null 2>&1; then
+    echo_success "FBP backend is responding on port ${FBP_PORT}"
+    curl --silent "http://127.0.0.1:${FBP_PORT}/socket-health" | jq . 2>/dev/null || echo "(health endpoint returned data)"
+  else
+    echo_warn "FBP backend not yet responding on port ${FBP_PORT} (may still be starting)"
+  fi
 fi
 
 echo ""

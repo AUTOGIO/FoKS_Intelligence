@@ -1,3 +1,4 @@
+from urllib.parse import quote
 from __future__ import annotations
 
 import importlib
@@ -48,7 +49,7 @@ def test_settings_defaults(monkeypatch):
     assert settings.fbp_socket_path == "/tmp/fbp.sock"
     assert settings.fbp_transport == "socket"
     assert settings.fbp_port == 8000
-    assert settings.fbp_base_url.startswith("http+unix://")
+    assert settings.fbp_base_url == f"http+unix://{quote('/tmp/fbp.sock', safe='')}:"
     assert settings.default_timeout_seconds == 30
     assert settings.default_retry_attempts == 3
     assert settings.retry_backoff_seconds == 2.0

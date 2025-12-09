@@ -21,7 +21,7 @@ High‑level components:
 - **FoKS Backend** – FastAPI service under `backend/app/`, exposes `/chat`, `/vision/analyze`, `/tasks`, `/conversations`, `/system`, `/metrics`.  
 - **LM Studio** – local LLM server (OpenAI‑compatible API) on `http://127.0.0.1:1234`.  
 - **Task Runner** – macOS automation layer (open URL, run scripts, TTS, notifications, clipboard, screenshots, apps).  
-- **FBP Backend** – external automation backend (`~/Documents/FBP_Backend`) used for NFA/REDESIM flows.  
+- **FBP Backend** – external automation backend (`~/Documents/FBP_Backend`) used for NFA/REDESIM flows. FoKS now connects via UNIX socket `/tmp/fbp.sock` by default; set `FBP_TRANSPORT=port` and `FBP_PORT=<port>` for TCP debugging.
 - **Ops Layer** – scripts, watchdogs, launchd, Shortcuts, Node‑RED and n8n flows in `ops/`.
 
 ### Mermaid Diagram (FoKS + FBP + LM Studio + macOS)

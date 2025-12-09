@@ -181,7 +181,7 @@ class Settings(BaseModel):
         """Return FBP base URL based on transport preference."""
         if self.fbp_transport.lower() == "socket":
             encoded = quote(self.fbp_socket_path, safe="")
-            return f"http+unix://{encoded}"
+            return f"http+unix://{encoded}:"
         if self.fbp_backend_base_url:
             return self.fbp_backend_base_url.rstrip("/")
         return f"http://localhost:{self.fbp_port}"

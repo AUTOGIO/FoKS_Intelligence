@@ -180,7 +180,7 @@ bash ops/scripts/foks_env_autofix.sh
 
 ### Check Backend Health:
 ```bash
-curl http://localhost:8000/health
+curl --unix-socket /tmp/fbp.sock http://localhost/socket-health
 ```
 
 ---
@@ -201,14 +201,14 @@ curl http://localhost:8000/health
 
 3. **Health endpoint responds:**
    ```bash
-   curl http://localhost:8000/health
+   curl --unix-socket /tmp/fbp.sock http://localhost/socket-health
    # Should return 200 OK
    ```
 
 4. **NFA pipeline works:**
    ```bash
    # Test with actual NFA request
-   curl -X POST http://localhost:8000/nfa/analyze -H "Content-Type: application/json" -d '{"data": "test"}'
+   curl --unix-socket /tmp/fbp.sock http://localhost/api/nfa/test
    ```
 
 ---
@@ -250,7 +250,7 @@ The following mechanisms **prevent this from breaking again**:
 
 2. **Verify it's running:**
    ```bash
-   curl http://localhost:8000/health
+   curl --unix-socket /tmp/fbp.sock http://localhost/socket-health
    ```
 
 3. **If you encounter issues:**

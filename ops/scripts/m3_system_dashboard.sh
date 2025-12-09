@@ -97,15 +97,27 @@ log ""
 
 # FBP health
 log "FBP Backend:"
-if check_http_endpoint "  Status" "http://127.0.0.1:8000/health" 2>/dev/null; then
-  echo ""
+FBP_TRANSPORT="${FBP_TRANSPORT:-socket}"
+FBP_SOCKET_PATH="${FBP_SOCKET_PATH:-/tmp/fbp.sock}"
+FBP_PORT="${FBP_PORT:-8000}"
+if [[ "$FBP_TRANSPORT" == "socket" ]]; then
+  if curl --unix-socket "$FBP_SOCKET_PATH" -fsS http://localhost/socket-health >/dev/null 2>&1; then
+    log "  Status: OK (socket $FBP_SOCKET_PATH)"
+    echo ""
+  else
+    echo " (DOWN)"
+  fi
 else
-  echo " (DOWN)"
-  if [[ -f "$PROJECT_ROOT/ops/logs/fbp_backend.pid" ]]; then
-    fbp_pid=$(cat "$PROJECT_ROOT/ops/logs/fbp_backend.pid" 2>/dev/null || echo "")
-    if [[ -n "$fbp_pid" ]]; then
-      log "  PID: $fbp_pid | Memory: $(get_process_memory "$fbp_pid") | CPU: $(get_process_cpu "$fbp_pid")"
-    fi
+  if check_http_endpoint "  Status" "http://127.0.0.1:${FBP_PORT}/socket-health" 2>/dev/null; then
+    echo ""
+  else
+    echo " (DOWN)"
+  fi
+fi
+if [[ -f "$PROJECT_ROOT/ops/logs/fbp_backend.pid" ]]; then
+  fbp_pid=$(cat "$PROJECT_ROOT/ops/logs/fbp_backend.pid" 2>/dev/null || echo "")
+  if [[ -n "$fbp_pid" ]]; then
+    log "  PID: $fbp_pid | Memory: $(get_process_memory "$fbp_pid") | CPU: $(get_process_cpu "$fbp_pid")"
   fi
 fi
 
