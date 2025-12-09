@@ -2,7 +2,7 @@
 # FoKS Intelligence - Deployment Script
 # Automated deployment script for production
 
-set -e  # Exit on error
+set -euo pipefail  # Exit on error, treat unset vars as errors
 
 # Colors for output
 RED='\033[0;31m'

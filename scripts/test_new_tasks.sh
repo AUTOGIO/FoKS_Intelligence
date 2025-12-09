@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Teste das novas tasks adicionadas
 
-BASE_URL="http://localhost:8001"
+set -euo pipefail
+
+BASE_URL="http://localhost:8000"
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
@@ -60,7 +62,7 @@ echo
 # Test 5: Screenshot (comentado - requer interação)
 echo -e "${YELLOW}[TEST] Screenshot (skipped - requires interaction)${NC}"
 echo "Para testar manualmente:"
-echo 'curl -X POST http://localhost:8001/tasks/run -H "Content-Type: application/json" -d '"'"'{"task_name": "screenshot", "params": {"type": "full"}}'"'"''
+echo 'curl -X POST http://localhost:8000/tasks/run -H "Content-Type: application/json" -d '"'"'{"task_name": "screenshot", "params": {"type": "full"}}'"'"''
 echo
 
 echo -e "${GREEN}Testes concluídos!${NC}"

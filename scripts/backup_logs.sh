@@ -2,7 +2,7 @@
 # FoKS Intelligence - Log Backup Script
 # Backs up important log files
 
-set -e
+set -euo pipefail
 
 PROJECT_ROOT="/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence"
 LOG_DIR="$PROJECT_ROOT/logs"

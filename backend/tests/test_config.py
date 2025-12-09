@@ -44,7 +44,7 @@ def test_settings_defaults(monkeypatch):
     assert settings.environment == "development"
     assert settings.lmstudio_base_url == "http://localhost:1234/v1"
     assert settings.model_directories == ["/Volumes/MICRO/LM_STUDIO_MODELS"]
-    assert settings.fbp_backend_base_url == "http://localhost:9500"
+    assert settings.fbp_backend_base_url == "http://localhost:8000"
     assert settings.default_timeout_seconds == 30
     assert settings.default_retry_attempts == 3
     assert settings.retry_backoff_seconds == 2.0

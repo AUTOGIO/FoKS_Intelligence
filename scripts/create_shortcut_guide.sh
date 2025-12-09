@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Script helper para criar o atalho FoKS Intelligence
 
-set -e
+set -euo pipefail
 
 echo "=========================================="
 echo "  FoKS Intelligence - Shortcut Helper"
@@ -10,7 +10,7 @@ echo ""
 echo "Este script ajuda a criar o atalho macOS."
 echo ""
 echo "📋 Pré-requisitos:"
-echo "  ✅ Backend rodando em http://localhost:8001"
+echo "  ✅ Backend rodando em http://localhost:8000"
 echo "  ✅ LM Studio ativo"
 echo ""
 echo "📖 Instruções completas em:"
@@ -23,7 +23,7 @@ echo "2. Crie novo atalho: 'FoKS Intelligence'"
 echo "3. Adicione ações na ordem:"
 echo "   - Perguntar (texto)"
 echo "   - Dicionário (JSON payload)"
-echo "   - Obter Conteúdo de URL (POST http://localhost:8001/chat/)"
+echo "   - Obter Conteúdo de URL (POST http://localhost:8000/chat/)"
 echo "   - Obter valor para chave (reply)"
 echo "   - Mostrar Notificação"
 echo ""
@@ -41,7 +41,7 @@ cat << 'EOF'
 EOF
 echo ""
 echo "🧪 Teste rápido:"
-echo "  curl -X POST http://localhost:8001/chat/ \\"
+echo "  curl -X POST http://localhost:8000/chat/ \\"
 echo "    -H 'Content-Type: application/json' \\"
 echo "    -d '{\"message\": \"Olá!\", \"source\": \"test\"}'"
 echo ""

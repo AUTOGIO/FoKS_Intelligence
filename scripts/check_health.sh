@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Health check script for FoKS Intelligence
 
-set -e
+set -euo pipefail
 
-BASE_URL="${FOKS_BASE_URL:-http://localhost:8001}"
+BASE_URL="${FOKS_BASE_URL:-http://localhost:8000}"
 TIMEOUT=5
 
 echo "🔍 Checking FoKS Intelligence health..."

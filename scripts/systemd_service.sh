@@ -2,6 +2,8 @@
 # FoKS Intelligence - Systemd Service Setup
 # Creates a systemd service file for running FoKS Intelligence
 
+set -euo pipefail
+
 PROJECT_ROOT="/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence"
 BACKEND_DIR="$PROJECT_ROOT/backend"
 SERVICE_USER=$(whoami)

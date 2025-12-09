@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # - Validates local environment (Python, LM Studio, FoKS import)
 # - Activates the FoKS virtualenv (if present)
-# - Starts FoKS backend and (optionally) FBP backend via nohup
+# - Starts FoKS backend and (optionally) FBP backend (launchd-friendly)
 # - Spawns health-check watchers for FoKS / FBP / LM Studio
 # - Runs non-fatal smoke tests for LMStudio and FBP clients
 #
@@ -94,7 +94,7 @@ configure_environment() {
   log_section "Configuring environment variables"
 
   export FOKS_PORT="${FOKS_PORT:-8000}"
-  export FBP_PORT="${FBP_PORT:-9500}"
+  export FBP_PORT="${FBP_PORT:-8000}"
   export LMSTUDIO_PORT="${LMSTUDIO_PORT:-1234}"
 
   # Prepend FoKS backend to PYTHONPATH for app.main imports
@@ -159,7 +159,7 @@ start_foks() {
   log_info "Launching FoKS on port $FOKS_PORT"
   (
     cd "$BACKEND_DIR"
-    nohup "$PYTHON_BIN" -m uvicorn app.main:app --host 0.0.0.0 --port "$FOKS_PORT" --reload \
+    "$PYTHON_BIN" -m uvicorn app.main:app --host 0.0.0.0 --port "$FOKS_PORT" --reload \
       >>"$LOG_DIR/foks_server.log" 2>&1 &
     echo $! >"$LOG_DIR/foks_server.pid"
   )
@@ -206,7 +206,7 @@ start_fbp() {
       exit 0
     fi
 
-    nohup "$fbp_python" -m uvicorn app.main:app --host 0.0.0.0 --port "$FBP_PORT" --reload \
+    "$fbp_python" -m uvicorn app.main:app --host 0.0.0.0 --port "$FBP_PORT" --reload \
       >>"$LOG_DIR/fbp_server.log" 2>&1 &
     echo $! >"$LOG_DIR/fbp_server.pid"
   )

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Setup PostgreSQL database for FoKS Intelligence
 
-set -e
+set -euo pipefail
 
 echo "=========================================="
 echo "  FoKS Intelligence - PostgreSQL Setup"

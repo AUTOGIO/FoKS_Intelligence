@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Setup automatic database backups via cron
 
-set -e
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_SCRIPT="$SCRIPT_DIR/backup_database.sh"

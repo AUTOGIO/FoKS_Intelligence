@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Backup script for FoKS Intelligence database
 
-set -e
+set -euo pipefail
 
 PROJECT_ROOT="/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence"
 DB_PATH="$PROJECT_ROOT/backend/data/conversations.db"

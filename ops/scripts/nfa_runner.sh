@@ -7,7 +7,7 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 BACKEND_DIR="$PROJECT_ROOT/backend"
 VENV_DIR="$BACKEND_DIR/.venv_foks"
 VENV_PYTHON="$VENV_DIR/bin/python"
-OPS_LOG_DIR="$PROJECT_ROOT/ops/logs"
+LOG_DIR="$PROJECT_ROOT/logs"
 FBP_DIR="/Users/dnigga/Documents/FBP_Backend"
 
 log() {
@@ -27,6 +27,7 @@ log() {
 
 log "INFO" "NFA Runner Setup"
 log "INFO" "Project Root: $PROJECT_ROOT"
+mkdir -p "$LOG_DIR"
 
 if [[ ! -f "$VENV_PYTHON" ]]; then
   log "ERROR" "FoKS venv Python not found at $VENV_PYTHON"
@@ -38,13 +39,13 @@ log "INFO" "Activating FoKS venv: $VENV_DIR"
 source "$VENV_DIR/bin/activate"
 
 log "INFO" "Starting FoKS backend..."
-if [[ -f "$OPS_LOG_DIR/foks_backend.pid" ]]; then
-  existing_pid="$(cat "$OPS_LOG_DIR/foks_backend.pid" 2>/dev/null || true)"
+if [[ -f "$LOG_DIR/foks_backend.pid" ]]; then
+  existing_pid="$(cat "$LOG_DIR/foks_backend.pid" 2>/dev/null || true)"
   if [[ -n "${existing_pid:-}" ]] && ps -p "$existing_pid" >/dev/null 2>&1; then
     log "INFO" "FoKS backend already running (PID $existing_pid)"
   else
     log "WARN" "Stale PID file found, removing..."
-    rm -f "$OPS_LOG_DIR/foks_backend.pid"
+    rm -f "$LOG_DIR/foks_backend.pid"
     bash "$PROJECT_ROOT/ops/scripts/foks_boot.sh"
   fi
 else
@@ -66,7 +67,7 @@ done
 
 log "INFO" "Checking FBP backend..."
 if [[ -d "$FBP_DIR" ]]; then
-  FBP_URL="http://127.0.0.1:9500/health"
+  FBP_URL="http://127.0.0.1:8000/health"
   if curl -fsS --max-time 2 "$FBP_URL" >/dev/null 2>&1; then
     log "INFO" "FBP backend is already running"
   else
@@ -95,5 +96,5 @@ mkdir -p "$PROJECT_ROOT/output/nfa/results"
 
 log "INFO" "NFA Runner setup complete!"
 log "INFO" "FoKS backend: http://127.0.0.1:8000"
-log "INFO" "FBP backend: http://127.0.0.1:9500 (if running)"
+log "INFO" "FBP backend: http://127.0.0.1:8000 (if running)"
 log "INFO" "LM Studio: $LMSTUDIO_BASE_URL"

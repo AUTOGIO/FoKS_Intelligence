@@ -3,10 +3,14 @@ from __future__ import annotations
 import os
 from functools import lru_cache
 import multiprocessing
+from pathlib import Path
 import platform
 from typing import List, Optional
 
 from pydantic import BaseModel, Field, validator
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+LOGS_DIR = PROJECT_ROOT / "logs"
 
 
 def _bool_env(key: str, default: bool) -> bool:
@@ -56,7 +60,7 @@ class Settings(BaseModel):
 
     # External backends
     fbp_backend_base_url: str = Field(
-        default_factory=lambda: os.getenv("FBP_BACKEND_BASE_URL", "http://localhost:9500")
+        default_factory=lambda: os.getenv("FBP_BACKEND_BASE_URL", "http://localhost:8000")
     )
 
     # Networking defaults
@@ -87,7 +91,7 @@ class Settings(BaseModel):
     log_file_path: str = Field(
         default_factory=lambda: os.getenv(
             "FOKS_LOG_FILE",
-            "/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/logs/app.log",
+            str(LOGS_DIR / "app.log"),
         )
     )
     log_level: str = Field(

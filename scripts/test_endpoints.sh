@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Script de teste completo para FoKS Intelligence
 
-set -e
+set -euo pipefail
 
-BASE_URL="http://localhost:8001"
+BASE_URL="http://localhost:8000"
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'

@@ -2,6 +2,7 @@
 # FoKS Intelligence Virtualenv Guard
 # Ensures that when a virtual environment is active, its bin directory is
 # always at the front of PATH (works for bash and zsh).
+set -euo pipefail
 
 if [[ -z ${FOKS_VENV_GUARD_LOADED:-} ]]; then
   export FOKS_VENV_GUARD_LOADED=1
