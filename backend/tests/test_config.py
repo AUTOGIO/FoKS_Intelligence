@@ -45,6 +45,10 @@ def test_settings_defaults(monkeypatch):
     assert settings.lmstudio_base_url == "http://localhost:1234/v1"
     assert settings.model_directories == ["/Volumes/MICRO/LM_STUDIO_MODELS"]
     assert settings.fbp_backend_base_url == "http://localhost:8000"
+    assert settings.fbp_socket_path == "/tmp/fbp.sock"
+    assert settings.fbp_transport == "socket"
+    assert settings.fbp_port == 8000
+    assert settings.fbp_base_url.startswith("http+unix://")
     assert settings.default_timeout_seconds == 30
     assert settings.default_retry_attempts == 3
     assert settings.retry_backoff_seconds == 2.0
@@ -61,6 +65,9 @@ def test_settings_env_overrides(monkeypatch):
     monkeypatch.setenv("LMSTUDIO_BASE_URL", "http://127.0.0.1:9999/v1")
     monkeypatch.setenv("FOKS_MODEL_DIRECTORIES", "/tmp/models-a,/tmp/models-b")
     monkeypatch.setenv("FBP_BACKEND_BASE_URL", "http://fbp.local/api")
+    monkeypatch.setenv("FBP_SOCKET_PATH", "/tmp/custom.sock")
+    monkeypatch.setenv("FBP_TRANSPORT", "port")
+    monkeypatch.setenv("FBP_PORT", "9000")
     monkeypatch.setenv("FOKS_DEFAULT_TIMEOUT_SECONDS", "45")
     monkeypatch.setenv("FOKS_DEFAULT_RETRY_ATTEMPTS", "5")
     monkeypatch.setenv("FOKS_RETRY_BACKOFF_SECONDS", "1.5")
@@ -75,6 +82,10 @@ def test_settings_env_overrides(monkeypatch):
     assert settings.lmstudio_base_url == "http://127.0.0.1:9999/v1"
     assert settings.model_directories == ["/tmp/models-a", "/tmp/models-b"]
     assert settings.fbp_backend_base_url == "http://fbp.local/api"
+    assert settings.fbp_socket_path == "/tmp/custom.sock"
+    assert settings.fbp_transport == "port"
+    assert settings.fbp_port == 9000
+    assert settings.fbp_base_url == "http://localhost:9000"
     assert settings.default_timeout_seconds == 45
     assert settings.default_retry_attempts == 5
     assert settings.retry_backoff_seconds == 1.5

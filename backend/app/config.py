@@ -5,6 +5,7 @@ from functools import lru_cache
 import multiprocessing
 from pathlib import Path
 import platform
+from urllib.parse import quote
 from typing import List, Optional
 
 from pydantic import BaseModel, Field, validator
@@ -62,6 +63,9 @@ class Settings(BaseModel):
     fbp_backend_base_url: str = Field(
         default_factory=lambda: os.getenv("FBP_BACKEND_BASE_URL", "http://localhost:8000")
     )
+    fbp_socket_path: str = Field(default_factory=lambda: os.getenv("FBP_SOCKET_PATH", "/tmp/fbp.sock"))
+    fbp_transport: str = Field(default_factory=lambda: os.getenv("FBP_TRANSPORT", "socket"))
+    fbp_port: int = Field(default_factory=lambda: int(os.getenv("FBP_PORT", "8000")))
 
     # Networking defaults
     default_timeout_seconds: int = Field(
@@ -171,6 +175,16 @@ class Settings(BaseModel):
         if not value:
             return "INFO"
         return str(value).upper()
+
+    @property
+    def fbp_base_url(self) -> str:
+        """Return FBP base URL based on transport preference."""
+        if self.fbp_transport.lower() == "socket":
+            encoded = quote(self.fbp_socket_path, safe="")
+            return f"http+unix://{encoded}"
+        if self.fbp_backend_base_url:
+            return self.fbp_backend_base_url.rstrip("/")
+        return f"http://localhost:{self.fbp_port}"
 
 
 @lru_cache(maxsize=1)

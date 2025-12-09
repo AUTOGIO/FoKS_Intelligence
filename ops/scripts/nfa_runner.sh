@@ -9,6 +9,9 @@ VENV_DIR="$BACKEND_DIR/.venv_foks"
 VENV_PYTHON="$VENV_DIR/bin/python"
 LOG_DIR="$PROJECT_ROOT/logs"
 FBP_DIR="/Users/dnigga/Documents/FBP_Backend"
+FBP_TRANSPORT="${FBP_TRANSPORT:-socket}"
+FBP_SOCKET_PATH="${FBP_SOCKET_PATH:-/tmp/fbp.sock}"
+FBP_PORT="${FBP_PORT:-8000}"
 
 log() {
   local level="$1"; shift
@@ -67,11 +70,19 @@ done
 
 log "INFO" "Checking FBP backend..."
 if [[ -d "$FBP_DIR" ]]; then
-  FBP_URL="http://127.0.0.1:8000/health"
-  if curl -fsS --max-time 2 "$FBP_URL" >/dev/null 2>&1; then
-    log "INFO" "FBP backend is already running"
+  if [[ "$FBP_TRANSPORT" == "socket" ]]; then
+    if curl --unix-socket "$FBP_SOCKET_PATH" -fsS http://localhost/socket-health >/dev/null 2>&1; then
+      log "INFO" "FBP backend is reachable via UNIX socket ($FBP_SOCKET_PATH)"
+    else
+      log "INFO" "FBP backend not reachable via UNIX socket (optional)"
+    fi
   else
-    log "INFO" "FBP backend not running (optional)"
+    FBP_URL="http://127.0.0.1:${FBP_PORT}/socket-health"
+    if curl -fsS --max-time 2 "$FBP_URL" >/dev/null 2>&1; then
+      log "INFO" "FBP backend is already running"
+    else
+      log "INFO" "FBP backend not running (optional)"
+    fi
   fi
 else
   log "WARN" "FBP directory not found at $FBP_DIR (optional)"
@@ -96,5 +107,9 @@ mkdir -p "$PROJECT_ROOT/output/nfa/results"
 
 log "INFO" "NFA Runner setup complete!"
 log "INFO" "FoKS backend: http://127.0.0.1:8000"
-log "INFO" "FBP backend: http://127.0.0.1:8000 (if running)"
+if [[ "$FBP_TRANSPORT" == "socket" ]]; then
+  log "INFO" "FBP backend: unix socket $FBP_SOCKET_PATH (if running)"
+else
+  log "INFO" "FBP backend: http://127.0.0.1:${FBP_PORT} (if running)"
+fi
 log "INFO" "LM Studio: $LMSTUDIO_BASE_URL"

@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # - Validates local environment (Python, LM Studio, FoKS import)
 # - Activates the FoKS virtualenv (if present)
-# - Starts FoKS backend and (optionally) FBP backend (launchd-friendly)
+# - Starts FoKS backend and (optionally) FBP backend (launchd-friendly, UNIX socket aware)
 # - Spawns health-check watchers for FoKS / FBP / LM Studio
 # - Runs non-fatal smoke tests for LMStudio and FBP clients
 #
@@ -95,6 +95,8 @@ configure_environment() {
 
   export FOKS_PORT="${FOKS_PORT:-8000}"
   export FBP_PORT="${FBP_PORT:-8000}"
+  export FBP_TRANSPORT="${FBP_TRANSPORT:-socket}"
+  export FBP_SOCKET_PATH="${FBP_SOCKET_PATH:-/tmp/fbp.sock}"
   export LMSTUDIO_PORT="${LMSTUDIO_PORT:-1234}"
 
   # Prepend FoKS backend to PYTHONPATH for app.main imports
@@ -215,9 +217,11 @@ start_fbp() {
 
 start_health_watcher() {
   local name="$1"
-  local url="$2"
+  local target="$2"
   local logfile="$3"
   local pidfile="$4"
+  local mode="${5:-http}"
+  local socket_path="${6:-}"
 
   if [[ -f "$pidfile" ]]; then
     local existing_pid
@@ -228,14 +232,20 @@ start_health_watcher() {
     fi
   fi
 
-  log_info "Starting health watcher for $name at $url"
+  log_info "Starting health watcher for $name at $target (mode: $mode)"
 
-  env WATCH_NAME="$name" WATCH_URL="$url" bash -c '
+  env WATCH_NAME="$name" WATCH_URL="$target" WATCH_MODE="$mode" WATCH_SOCKET="$socket_path" bash -c '
     while true; do
       ts="$(date "+%Y-%m-%d %H:%M:%S")"
-      echo "[$ts] Checking ${WATCH_NAME} at ${WATCH_URL}"
-      if ! curl -fsS "${WATCH_URL}" >/dev/null 2>&1; then
-        echo "[$ts] ${WATCH_NAME} health check FAILED"
+      echo "[$ts] Checking ${WATCH_NAME} at ${WATCH_URL} (mode: ${WATCH_MODE})"
+      if [[ "${WATCH_MODE}" == "socket" ]]; then
+        if ! curl --unix-socket "${WATCH_SOCKET}" -fsS "${WATCH_URL}" >/dev/null 2>&1; then
+          echo "[$ts] ${WATCH_NAME} health check FAILED via socket"
+        fi
+      else
+        if ! curl -fsS "${WATCH_URL}" >/dev/null 2>&1; then
+          echo "[$ts] ${WATCH_NAME} health check FAILED"
+        fi
       fi
       sleep 10
     done
@@ -250,8 +260,13 @@ start_health_watchers() {
   start_health_watcher "FoKS" "http://localhost:${FOKS_PORT}/health" \
     "$LOG_DIR/watch_foks_health.log" "$LOG_DIR/watch_foks_health.pid"
 
-  start_health_watcher "FBP" "http://localhost:${FBP_PORT}/health" \
-    "$LOG_DIR/watch_fbp_health.log" "$LOG_DIR/watch_fbp_health.pid"
+  if [[ "$FBP_TRANSPORT" == "socket" ]]; then
+    start_health_watcher "FBP" "http://localhost/socket-health" \
+      "$LOG_DIR/watch_fbp_health.log" "$LOG_DIR/watch_fbp_health.pid" "socket" "$FBP_SOCKET_PATH"
+  else
+    start_health_watcher "FBP" "http://localhost:${FBP_PORT}/socket-health" \
+      "$LOG_DIR/watch_fbp_health.log" "$LOG_DIR/watch_fbp_health.pid"
+  fi
 
   start_health_watcher "LMStudio" "http://localhost:${LMSTUDIO_PORT}/v1/health" \
     "$LOG_DIR/watch_lmstudio_health.log" "$LOG_DIR/watch_lmstudio_health.pid"

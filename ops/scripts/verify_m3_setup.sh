@@ -75,11 +75,22 @@ else
   echo -e "${YELLOW}? (service may not be running)${NC}"
 fi
 
-echo -n "  FBP /health: "
-if curl -s --max-time 2 http://127.0.0.1:8000/health >/dev/null 2>&1; then
-  echo -e "${GREEN}✓${NC}"
+echo -n "  FBP socket-health: "
+FBP_TRANSPORT="${FBP_TRANSPORT:-socket}"
+FBP_SOCKET_PATH="${FBP_SOCKET_PATH:-/tmp/fbp.sock}"
+FBP_PORT="${FBP_PORT:-8000}"
+if [[ "$FBP_TRANSPORT" == "socket" ]]; then
+  if curl --unix-socket "$FBP_SOCKET_PATH" -s --max-time 2 http://localhost/socket-health >/dev/null 2>&1; then
+    echo -e "${GREEN}✓${NC}"
+  else
+    echo -e "${YELLOW}? (service may not be running)${NC}"
+  fi
 else
-  echo -e "${YELLOW}? (service may not be running)${NC}"
+  if curl -s --max-time 2 "http://127.0.0.1:${FBP_PORT}/socket-health" >/dev/null 2>&1; then
+    echo -e "${GREEN}✓${NC}"
+  else
+    echo -e "${YELLOW}? (service may not be running)${NC}"
+  fi
 fi
 
 echo -n "  LM Studio /v1/models: "

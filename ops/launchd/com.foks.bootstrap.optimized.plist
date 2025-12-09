@@ -52,6 +52,10 @@
       <string>1</string>
       <key>PYTHONDONTWRITEBYTECODE</key>
       <string>1</string>
+      <key>FBP_TRANSPORT</key>
+      <string>socket</string>
+      <key>FBP_SOCKET_PATH</key>
+      <string>/tmp/fbp.sock</string>
       <!-- LM Studio connection (from FoKS config, but can override here if needed) -->
       <!-- <key>LMSTUDIO_BASE_URL</key> -->
       <!-- <string>http://127.0.0.1:1234</string> -->

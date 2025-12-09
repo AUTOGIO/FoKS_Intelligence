@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import Any, Callable, Dict, Optional
 
 import httpx
-
 from app.config import settings
 from app.services.logging_utils import get_logger
 
@@ -53,7 +52,9 @@ class FBPClient:
     """Async client responsável por conversar com o FBP backend."""
 
     def __init__(self, *, client_factory: Optional[ClientFactory] = None) -> None:
-        self.base_url = settings.fbp_backend_base_url.rstrip("/")
+        self.base_url = settings.fbp_base_url.rstrip("/")
+        self._use_socket = settings.fbp_transport.lower() == "socket"
+        self._socket_path = settings.fbp_socket_path if self._use_socket else None
         self._client_factory = client_factory
         self._client: Optional[httpx.AsyncClient] = None
 
@@ -64,7 +65,15 @@ class FBPClient:
             else:
                 timeout = httpx.Timeout(settings.default_timeout_seconds)
                 limits = httpx.Limits(max_connections=20, max_keepalive_connections=10)
-                self._client = httpx.AsyncClient(base_url=self.base_url, timeout=timeout, limits=limits)
+                transport: Optional[httpx.AsyncHTTPTransport] = None
+                if self._use_socket and self._socket_path:
+                    transport = httpx.AsyncHTTPTransport(uds=self._socket_path)
+                self._client = httpx.AsyncClient(
+                    base_url=self.base_url,
+                    timeout=timeout,
+                    limits=limits,
+                    transport=transport,
+                )
         return self._client
 
     async def close(self) -> None:
