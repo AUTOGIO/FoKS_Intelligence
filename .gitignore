@@ -52,3 +52,6 @@ node_modules/
 *.swo
 Thumbs.db
 
+# Output and logs directories
+output/
+logs/
