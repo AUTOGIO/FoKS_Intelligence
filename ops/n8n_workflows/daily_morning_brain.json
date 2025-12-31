@@ -1,0 +1,146 @@
+{
+  "name": "1 – Daily Morning Brain (Hardened)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger (08:30 Daily)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "command": "/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/ops/scripts/m3_system_dashboard.sh --json"
+      },
+      "id": "execute-dashboard",
+      "name": "Execute Dashboard Script",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse JSON output from dashboard script\nconst items = $input.all();\nconst jsonOutput = items[0].json.stdout || items[0].json.stderr || items[0].json;\n\nlet dashboardData;\ntry {\n  // Try to parse as JSON string first\n  if (typeof jsonOutput === 'string') {\n    dashboardData = JSON.parse(jsonOutput);\n  } else {\n    dashboardData = jsonOutput;\n  }\n} catch (e) {\n  throw new Error(`Failed to parse dashboard JSON: ${e.message}. Output: ${jsonOutput}`);\n}\n\n// Extract health status\nconst systemHealthy = dashboardData.system?.healthy ?? false;\nconst foksOk = dashboardData.services?.foks?.health?.ok ?? false;\nconst lmstudioOk = dashboardData.services?.lmstudio?.health?.ok ?? false;\nconst fbpOk = dashboardData.services?.fbp?.health?.ok ?? false;\nconst fbpOnDemand = dashboardData.services?.fbp?.health?.on_demand ?? true;\n\n// Build status messages\nconst foksStatus = foksOk ? '✅ Running' : '❌ Down';\nconst lmstudioStatus = lmstudioOk ? '✅ Running' : '❌ Down';\nlet fbpStatus;\nif (fbpOnDemand && !fbpOk) {\n  fbpStatus = '⚪ On-demand (not running)';\n} else if (fbpOk) {\n  fbpStatus = '✅ Running';\n} else {\n  fbpStatus = '❌ Down';\n}\n\n// Determine which required service is down (if any)\nlet requiredServiceDown = null;\nif (!foksOk) {\n  requiredServiceDown = 'FoKS Backend';\n} else if (!lmstudioOk) {\n  requiredServiceDown = 'LM Studio';\n}\n\n// Build notification content\nlet title, message;\n\nif (systemHealthy) {\n  title = 'Good morning – M3 Status';\n  message = `FoKS: ${foksStatus}\\nLM Studio: ${lmstudioStatus}\\nFBP: ${fbpStatus}`;\n} else {\n  title = '⚠️ Morning Brain – Attention Needed';\n  message = `${requiredServiceDown || 'Unknown service'} is down.\\n\\nFoKS: ${foksStatus}\\nLM Studio: ${lmstudioStatus}\\nFBP: ${fbpStatus}`;\n}\n\n// Escape quotes for shell command safety\nconst escapeForShell = (str) => str.replace(/\"/g, '\\\\\"').replace(/\\$/g, '\\\\$');\nconst titleEscaped = escapeForShell(title);\nconst messageEscaped = escapeForShell(message);\n\nreturn [{\n  json: {\n    systemHealthy,\n    foksOk,\n    lmstudioOk,\n    fbpOk,\n    fbpOnDemand,\n    requiredServiceDown,\n    title,\n    message,\n    titleEscaped,\n    messageEscaped,\n    timestamp: dashboardData.timestamp,\n    rawData: dashboardData\n  }\n}];"
+      },
+      "id": "parse-json",
+      "name": "Parse JSON & Format Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.systemHealthy }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-health",
+      "name": "Check System Health",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "command": "osascript -e 'display notification \"{{ $json.messageEscaped }}\" with title \"{{ $json.titleEscaped }}\" sound name \"Glass\"'"
+      },
+      "id": "notify-healthy",
+      "name": "Send Healthy Notification",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1120, 200],
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "command": "osascript -e 'display notification \"{{ $json.messageEscaped }}\" with title \"{{ $json.titleEscaped }}\" sound name \"Basso\"'"
+      },
+      "id": "notify-unhealthy",
+      "name": "Send Unhealthy Notification",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1120, 400],
+      "credentials": {}
+    }
+  ],
+  "connections": {
+    "Schedule Trigger (08:30 Daily)": {
+      "main": [
+        [
+          {
+            "node": "Execute Dashboard Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Dashboard Script": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON & Format Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse JSON & Format Message": {
+      "main": [
+        [
+          {
+            "node": "Check System Health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check System Health": {
+      "main": [
+        [
+          {
+            "node": "Send Healthy Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Unhealthy Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
+

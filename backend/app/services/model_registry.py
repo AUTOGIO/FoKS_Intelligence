@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Sequence
 
 from app.config import settings
 from app.services.logging_utils import get_logger
@@ -29,10 +29,10 @@ class ModelInfo:
 class ModelRegistry:
     """Registry of local MLX/GGUF models available for FoKS orchestration."""
 
-    def __init__(self, search_paths: Optional[Iterable[Path]] = None) -> None:
+    def __init__(self, search_paths: Iterable[Path] | None = None) -> None:
         directories = search_paths or (Path(path) for path in settings.model_directories)
-        self.directories: List[Path] = [Path(path).expanduser() for path in directories]
-        self._models: Dict[str, ModelInfo] = {}
+        self.directories: list[Path] = [Path(path).expanduser() for path in directories]
+        self._models: dict[str, ModelInfo] = {}
         self._load_static_entries()
 
     def _resolve_path(self, relative_path: str) -> Path:
@@ -47,7 +47,7 @@ class ModelRegistry:
 
     def _load_static_entries(self) -> None:
         """Populate registry with the user's current local collection."""
-        entries: List[ModelInfo] = [
+        entries: list[ModelInfo] = [
             ModelInfo(
                 name="hermes-3-llama-3.2-3b-mlx",
                 category="chat",
@@ -185,7 +185,7 @@ class ModelRegistry:
             self._models[entry.name] = entry
 
     # Public API -----------------------------------------------------------------
-    def list_models(self, category: Optional[str] = None) -> List[ModelInfo]:
+    def list_models(self, category: str | None = None) -> list[ModelInfo]:
         if category:
             normalized = category.lower()
             return [model for model in self._models.values() if model.category == normalized]
@@ -211,20 +211,31 @@ class ModelRegistry:
         self._load_static_entries()
 
 
-DEFAULT_MODELS: Dict[str, str] = {
-    "chat": "qwen3-14b-mlx",
-    "reasoning": "deepseek-r1-qwen3-8b-mlx",
-    "embeddings": "qwen3-embedding-4b-mlx",
-    "vision": "qwen3-vision-mlx",
-    "scientific": "granite-3.1-8b-mlx",
-}
+def _get_locked_defaults() -> dict[str, str]:
+    """
+    Build default models dict from locked settings.
+
+    This ensures model selection is config-driven and deterministic,
+    reading from FOKS_LOCKED_*_MODEL environment variables.
+    """
+    return {
+        "chat": settings.locked_chat_model,
+        "reasoning": settings.locked_reasoning_model,
+        "embeddings": settings.locked_embedding_model,
+        "vision": settings.locked_vision_model,
+        "scientific": settings.locked_scientific_model,
+    }
+
+
+# Default models are now config-driven via locked settings
+DEFAULT_MODELS: dict[str, str] = _get_locked_defaults()
 
 
 # Singleton registry instance ----------------------------------------------------
 registry = ModelRegistry()
 
 
-def list_models(category: Optional[str] = None) -> List[ModelInfo]:
+def list_models(category: str | None = None) -> list[ModelInfo]:
     return registry.list_models(category)
 
 

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any
 
 from app.services.logging_utils import get_logger
 
@@ -14,7 +14,7 @@ logger = get_logger("env_config")
 class EnvironmentConfig:
     """Load environment-specific configuration."""
 
-    def __init__(self, env: Optional[str] = None) -> None:
+    def __init__(self, env: str | None = None) -> None:
         """
         Initialize environment configuration.
 
@@ -24,9 +24,9 @@ class EnvironmentConfig:
         """
         self.env = env or os.getenv("FOKS_ENV", "development")
         self.config_dir = Path(__file__).parent.parent.parent / "config" / "environments"
-        self._config: Dict[str, any] = {}
+        self._config: dict[str, Any] = {}
 
-    def load(self) -> Dict[str, any]:
+    def load(self) -> dict[str, Any]:
         """
         Load environment-specific configuration.
 
@@ -52,7 +52,7 @@ class EnvironmentConfig:
         logger.info("Loaded configuration for environment: %s", self.env)
         return config
 
-    def _load_file(self, filename: str) -> Dict[str, any]:
+    def _load_file(self, filename: str) -> dict[str, Any]:
         """Load configuration from file."""
         file_path = self.config_dir / filename
 
@@ -61,7 +61,7 @@ class EnvironmentConfig:
             return {}
 
         config = {}
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             for line in f:
                 line = line.strip()
                 if not line or line.startswith("#"):
@@ -75,7 +75,7 @@ class EnvironmentConfig:
 
         return config
 
-    def _parse_value(self, value: str) -> any:
+    def _parse_value(self, value: str) -> Any:
         """Parse configuration value."""
         # Boolean
         if value.lower() in ("true", "1", "yes"):
@@ -98,7 +98,7 @@ class EnvironmentConfig:
         # String
         return value
 
-    def get(self, key: str, default: any = None) -> any:
+    def get(self, key: str, default: Any = None) -> Any:
         """Get configuration value."""
         return self._config.get(key, default)
 

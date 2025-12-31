@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-import json
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import httpx
 
@@ -18,7 +17,7 @@ class WebhookService:
 
     def __init__(self) -> None:
         """Initialize webhook service."""
-        self.webhook_urls: List[str] = []
+        self.webhook_urls: list[str] = []
         webhook_env = settings.webhook_urls if hasattr(settings, "webhook_urls") else []
         if webhook_env:
             self.webhook_urls = webhook_env if isinstance(webhook_env, list) else webhook_env.split(",")
@@ -26,8 +25,8 @@ class WebhookService:
     async def send_webhook(
         self,
         event_type: str,
-        data: Dict[str, Any],
-        webhook_url: Optional[str] = None,
+        data: dict[str, Any],
+        webhook_url: str | None = None,
     ) -> bool:
         """
         Send webhook notification.

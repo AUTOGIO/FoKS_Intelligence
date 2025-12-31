@@ -5,13 +5,16 @@ import logging
 import re
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Union
 
 from app.config import settings
 
-_LOGGER_CACHE: Dict[str, logging.Logger] = {}
+_LOGGER_CACHE: dict[str, logging.Logger] = {}
 
-SENSITIVE_PATTERNS = [
+# Type alias for sensitive patterns: (regex, replacement) or (regex, replacement, flags)
+SensitivePattern = Union[tuple[str, str], tuple[str, str, re.RegexFlag]]
+
+SENSITIVE_PATTERNS: list[SensitivePattern] = [
     (r'api[_-]?key["\']?\s*[:=]\s*["\']?([^"\'\s]+)', 'api_key="***"'),
     (r'password["\']?\s*[:=]\s*["\']?([^"\'\s]+)', 'password="***"'),
     (r'token["\']?\s*[:=]\s*["\']?([^"\'\s]+)', 'token="***"'),
@@ -33,10 +36,10 @@ def sanitize_text(text: str) -> str:
     sanitized = text
     for pattern in SENSITIVE_PATTERNS:
         if len(pattern) == 3:
-            regex, replacement, flags = pattern
+            regex, replacement, flags = pattern[0], pattern[1], pattern[2]
             sanitized = re.sub(regex, replacement, sanitized, flags=flags)
         else:
-            regex, replacement = pattern
+            regex, replacement = pattern[0], pattern[1]
             sanitized = re.sub(regex, replacement, sanitized)
     return sanitized
 
@@ -46,7 +49,7 @@ def sanitize_payload(payload: Any) -> Any:
     if payload is None:
         return None
     if isinstance(payload, dict):
-        sanitized: Dict[str, Any] = {}
+        sanitized: dict[str, Any] = {}
         for key, value in payload.items():
             normalized_key = key.lower().replace("-", "_") if isinstance(key, str) else key
             if isinstance(normalized_key, str) and normalized_key in SENSITIVE_KEYS:

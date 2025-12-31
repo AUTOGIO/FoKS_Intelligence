@@ -2,7 +2,82 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../../FBP_Backend"
 		}
 	],
-	"settings": {}
+	"settings": {
+		// ============================================================
+		// M3 iMac Optimized Workspace Settings
+		// System: iMac (Mac15,5), Apple M3 (8-core: 4P+4E), 16 GB RAM
+		// OS: macOS 26.3 Beta (25D5087f)
+		// ============================================================
+
+		// Terminal Integration (iTerm2 Profile)
+		"terminal.integrated.defaultProfile.osx": "FoKS Intelligence — M3 Optimized",
+		"terminal.integrated.profiles.osx": {
+			"FoKS Intelligence — M3 Optimized": {
+				"path": "/bin/zsh",
+				"args": [
+					"-lc",
+					"cd \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence\" && if [ -d backend/.venv_foks ]; then source backend/.venv_foks/bin/activate; fi && export PYTHONPATH=\"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend:${PYTHONPATH:-}\" && export FOKS_ROOT=\"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence\" && exec /bin/zsh"
+				],
+				"icon": "terminal"
+			},
+			"zsh": {
+				"path": "/bin/zsh",
+				"args": []
+			},
+			"bash": {
+				"path": "/bin/bash",
+				"args": []
+			}
+		},
+		"terminal.integrated.inheritEnv": true,
+		"terminal.integrated.fontSize": 13,
+		"terminal.integrated.fontFamily": "JetBrainsMonoNerdFontComplete-Regular, 'JetBrains Mono', 'Fira Code', Menlo, Monaco, monospace",
+		"terminal.integrated.scrollback": 50000,
+
+		// TypeScript/JavaScript Performance (M3-optimized)
+		"typescript.tsserver.maxTsServerMemory": 4096,
+		"typescript.tsserver.watchOptions": {
+			"watchFile": "useFsEvents",
+			"watchDirectory": "useFsEvents",
+			"fallbackPolling": "dynamicPriority",
+			"synchronousWatchDirectory": true,
+			"excludeDirectories": ["**/node_modules", "**/.git", "**/dist", "**/build"]
+		},
+		"typescript.suggest.autoImports": true,
+		"typescript.updateImportsOnFileMove.enabled": "always",
+
+		// Python Configuration
+		"python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv_foks/bin/python",
+		"python.terminal.activateEnvironment": true,
+		"python.analysis.typeCheckingMode": "basic",
+		"python.analysis.autoImportCompletions": true,
+
+		// File Watcher Exclusions (reduce M3 overhead)
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/node_modules/**": true,
+			"**/.venv*/**": true,
+			"**/__pycache__/**": true,
+			"**/.pytest_cache/**": true,
+			"**/dist/**": true,
+			"**/build/**": true,
+			"**/logs/**": true
+		},
+
+		// Editor Performance
+		"editor.semanticHighlighting.enabled": true,
+		"editor.bracketPairColorization.enabled": true,
+		"editor.smoothScrolling": true,
+		"editor.formatOnSave": true,
+
+		// Memory Management (16 GB RAM optimization)
+		"files.autoSave": "afterDelay",
+		"files.autoSaveDelay": 1000
+	}
 }

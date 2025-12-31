@@ -1,0 +1,30 @@
+{
+  "Name": "FoKS Intelligence — Backend (Prod)",
+  "Guid": "foks-backend-prod-0001",
+  "Custom Command": "Yes",
+  "Command": "cd /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend && source /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/.venv_foks/bin/activate && clear && echo '🚀 FoKS Intelligence Backend (Production)' && echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' && echo '' && echo '📍 Working directory:' && pwd && echo '' && echo '🐍 Python:' && python --version && echo '' && echo '🌐 FoKS API:' && echo '  http://localhost:8000' && echo '' && echo 'Health check:' && echo '  curl http://localhost:8000/health' && echo '' && echo 'Common commands:' && echo '  make run      # start backend (prod port 8000)' && echo '  make test     # run backend tests' && echo '  make lint     # code quality checks' && echo '' && exec zsh",
+  "Working Directory": "/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend",
+  "Badge Text": "FoKS\n:8000",
+  "Use Custom Window Title": true,
+  "Custom Window Title": "FoKS Backend — Production",
+  "Initial Text": "",
+  "Tags": ["foks", "backend", "production", "fastapi"],
+  "Triggers": [
+    {
+      "regex": "Application startup complete",
+      "action": "HighlightTrigger",
+      "parameter": "{#00ff00,}"
+    },
+    {
+      "regex": "ERROR|CRITICAL|Exception|FAILED",
+      "action": "HighlightTrigger",
+      "parameter": "{#ff0000,#ffff00}"
+    },
+    {
+      "regex": "WARNING",
+      "action": "HighlightTrigger",
+      "parameter": "{#ffaa00,}"
+    }
+  ],
+  "Description": "FoKS FastAPI backend using the production configuration (port 8000, backend/.venv_foks). Layout and environment only — backend start is manual via make or boot scripts."
+}

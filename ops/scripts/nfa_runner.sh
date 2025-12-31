@@ -11,7 +11,7 @@ LOG_DIR="$PROJECT_ROOT/logs"
 FBP_DIR="/Users/dnigga/Documents/FBP_Backend"
 FBP_TRANSPORT="${FBP_TRANSPORT:-socket}"
 FBP_SOCKET_PATH="${FBP_SOCKET_PATH:-/tmp/fbp.sock}"
-FBP_PORT="${FBP_PORT:-8000}"
+FBP_PORT="${FBP_PORT:-9500}"
 
 log() {
   local level="$1"; shift

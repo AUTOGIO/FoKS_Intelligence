@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import platform
 import subprocess
-from typing import Any, Dict
+from typing import Any
 
 from app.config import settings
 from app.services.logging_utils import get_logger
@@ -13,14 +13,14 @@ from app.services.logging_utils import get_logger
 logger = get_logger("m3_optimizations")
 
 
-def optimize_for_m3() -> Dict[str, Any]:
+def optimize_for_m3() -> dict[str, Any]:
     """
     Apply M3-specific optimizations.
 
     Returns:
         dict: Optimization settings applied
     """
-    optimizations: Dict[str, Any] = {}
+    optimizations: dict[str, Any] = {}
 
     if not settings.is_m3:
         logger.info("Not running on M3, skipping M3-specific optimizations")
@@ -61,7 +61,7 @@ def optimize_for_m3() -> Dict[str, Any]:
     return optimizations
 
 
-def get_system_info() -> Dict[str, Any]:
+def get_system_info() -> dict[str, Any]:
     """
     Get detailed system information for M3.
 
@@ -110,7 +110,7 @@ def check_neural_engine_available() -> bool:
         return False
 
 
-def recommend_model_config() -> Dict[str, Any]:
+def recommend_model_config() -> dict[str, Any]:
     """
     Recommend model configuration based on M3 hardware.
 

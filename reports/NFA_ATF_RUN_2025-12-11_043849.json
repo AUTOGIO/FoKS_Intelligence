@@ -1,0 +1,291 @@
+{
+  "metadata": {
+    "generated_at": "2025-12-11T04:38:49.249046",
+    "from_date": "08/12/2025",
+    "to_date": "08/12/2025",
+    "report_type": "NFA_ATF_BATCH"
+  },
+  "summary": {
+    "total_items": 15,
+    "success_count": 0,
+    "failure_count": 15,
+    "success_rate": 0.0,
+    "total_nfas_found": 0,
+    "total_pdfs_downloaded": 0,
+    "error_classifications": {
+      "authentication_error": 15
+    }
+  },
+  "results": [
+    {
+      "success": false,
+      "employee": {
+        "loja": "AP01- Remessa por conta de contrato de locação",
+        "cpf": "720.126.682-91",
+        "matricula": "AP01- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:37:55.484774",
+      "duration_ms": 14720,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "AP03- Remessa por conta de contrato de locação",
+        "cpf": "052.232.682-02",
+        "matricula": "AP03- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:37:55.644817",
+      "duration_ms": 14879,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "AP04- Remessa por conta de contrato de locação",
+        "cpf": "024.477.302-50",
+        "matricula": "AP04- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:37:55.485015",
+      "duration_ms": 14719,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "AP02- Remessa por conta de contrato de locação",
+        "cpf": "055.188.862-20",
+        "matricula": "AP02- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:09.118092",
+      "duration_ms": 13632,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA01- Remessa por conta de contrato de locação",
+        "cpf": "868.464.857-91",
+        "matricula": "BA01- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:09.054840",
+      "duration_ms": 13568,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA02- Remessa por conta de contrato de locação",
+        "cpf": "371.724.415-91",
+        "matricula": "BA02- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:09.074288",
+      "duration_ms": 13428,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA05- Remessa por conta de contrato de locação",
+        "cpf": "023.474.105-80",
+        "matricula": "BA05- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:22.357221",
+      "duration_ms": 13301,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA23- Remessa por conta de contrato de locação",
+        "cpf": "282.424.165-91",
+        "matricula": "BA23- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:22.096985",
+      "duration_ms": 13020,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA24- Remessa por conta de contrato de locação",
+        "cpf": "011.892.825-26",
+        "matricula": "BA24- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:22.894573",
+      "duration_ms": 13775,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA29- Remessa por conta de contrato de locação",
+        "cpf": "922.213.515-68",
+        "matricula": "BA29- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:35.180323",
+      "duration_ms": 13082,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA31- Remessa por conta de contrato de locação",
+        "cpf": "917.721.255-04",
+        "matricula": "BA31- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:35.196318",
+      "duration_ms": 12838,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA32- Remessa por conta de contrato de locação",
+        "cpf": "792.147.895-68",
+        "matricula": "BA32- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:35.740639",
+      "duration_ms": 12845,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA33- Remessa por conta de contrato de locação",
+        "cpf": "254.655.385-20",
+        "matricula": "BA33- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:49.248807",
+      "duration_ms": 14067,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA35- Remessa por conta de contrato de locação",
+        "cpf": "065.457.258-58",
+        "matricula": "BA35- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:48.816170",
+      "duration_ms": 13619,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "BA36- Remessa por conta de contrato de locação",
+        "cpf": "026.360.125-08",
+        "matricula": "BA36- Remessa por conta de contrato de locação"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:38:48.835439",
+      "duration_ms": 13094,
+      "error": "NFA ATF automation failed: Login failed: Page.wait_for_selector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator(\"input[name=\\\"username\\\"], input[type=\\\"text\\\"][name*=\\\"user\\\"], input[id*=\\\"user\\\"]\") to be visible\n",
+      "error_type": "TaskRunnerError",
+      "error_classification": "authentication_error"
+    }
+  ]
+}

@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from enum import Enum
-from typing import Callable, Optional, TypeVar
+from typing import TypeVar
 
 from app.services.logging_utils import get_logger
 
@@ -46,7 +47,7 @@ class CircuitBreaker:
         self.timeout = timeout
         self.expected_exception = expected_exception
         self.failure_count = 0
-        self.last_failure_time: Optional[float] = None
+        self.last_failure_time: float | None = None
         self.state = CircuitState.CLOSED
 
     def call(self, func: Callable[[], T], *args, **kwargs) -> T:

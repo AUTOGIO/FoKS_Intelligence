@@ -5,7 +5,7 @@ from __future__ import annotations
 import base64
 import hashlib
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 
 def generate_request_id() -> str:
@@ -52,7 +52,7 @@ def format_response_time(seconds: float) -> str:
         return f"{seconds:.2f}s"
 
 
-def safe_get_nested(data: Dict[str, Any], *keys: str, default: Any = None) -> Any:
+def safe_get_nested(data: dict[str, Any], *keys: str, default: Any = None) -> Any:
     """
     Safely get nested dictionary value.
 

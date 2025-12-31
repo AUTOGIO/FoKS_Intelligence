@@ -1,0 +1,28 @@
+{
+  "Profiles": [
+    {
+      "Guid": "foks-backend-0001-0000-0000-000000000001",
+      "Name": "FoKS Backend",
+      "Badge Text": "FoKS",
+      "Use Custom Badge": true,
+      "Working Directory": "$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence",
+      "Custom Command": "Yes",
+      "Command": "/bin/bash ops/scripts/foks_boot.sh",
+      "Tab Color": {
+        "Red Component": 0.1,
+        "Green Component": 0.2,
+        "Blue Component": 0.4
+      },
+      "Foreground Color": {
+        "Red Component": 0.7,
+        "Green Component": 0.8,
+        "Blue Component": 1.0
+      },
+      "Background Color": {
+        "Red Component": 0.05,
+        "Green Component": 0.1,
+        "Blue Component": 0.2
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "description": "Mapping of LOJA codes to Informações Adicionais text - First and Second columns from user-provided data",
+  "mapping": {
+    "RN13": "RN13 Remessa por conta de contrato de locação",
+    "RO01": "RO01 Remessa por conta de contrato de locação",
+    "RO03": "RO03 Remessa por conta de contrato de locação",
+    "RO04": "RO04 Remessa por conta de contrato de locação",
+    "RS01": "RS01 Remessa por conta de contrato de locação",
+    "SC02": "SC02 Remessa por conta de contrato de locação",
+    "SP04": "SP04 Remessa por conta de contrato de locação",
+    "AM13": "AM13 Remessa por conta de contrato de locação",
+    "BA48": "BA48 Remessa por conta de contrato de locação",
+    "CE20": "CE20 Remessa por conta de contrato de locação",
+    "DF13": "DF13 Remessa por conta de contrato de locação",
+    "MG27": "MG27 Remessa por conta de contrato de locação",
+    "PA37": "PA37 Remessa por conta de contrato de locação",
+    "PR27": "PR27 Remessa por conta de contrato de locação",
+    "RJ05": "RJ05 Remessa por conta de contrato de locação",
+    "BC17": "BC17 Remessa por conta de contrato de locação",
+    "RN101": "RN101 Remessa por conta de contrato de locação",
+    "RN102": "RN102 Remessa por conta de contrato de locação",
+    "RS04": "RS04 Remessa por conta de contrato de locação"
+  },
+  "default": "RN13 Remessa por conta de contrato de locação",
+  "note": "LOJA codes (first column) map to Informações Adicionais text (second column). Format: '{LOJA_CODE} Remessa por conta de contrato de locação'. Default is used if LOJA code not found in mapping. All entries use the same base text 'Remessa por conta de contrato de locação'."
+}

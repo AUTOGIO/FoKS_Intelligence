@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 import base64
-from typing import Optional
 
 from app.services import model_registry
-from app.services.logging_utils import get_logger
 from app.services.lmstudio_client import LMStudioClient
+from app.services.logging_utils import get_logger
 from app.services.model_registry import ModelInfo
 
 logger = get_logger(__name__)
 _CLIENT = LMStudioClient()
 
 
-def _select_model(model: Optional[str]) -> ModelInfo:
+def _select_model(model: str | None) -> ModelInfo:
     if model:
         return model_registry.resolve_model(model)
     return model_registry.get_default_model("vision")
@@ -22,7 +21,7 @@ async def analyze_image(
     image_bytes: bytes,
     prompt: str,
     *,
-    model: Optional[str] = None,
+    model: str | None = None,
 ) -> dict:
     if not image_bytes:
         raise ValueError("image_bytes must not be empty")

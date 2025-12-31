@@ -1,0 +1,232 @@
+{
+  "Profiles": [
+    {
+      "Name": "FoKS Intelligence — M3 Optimized",
+      "Guid": "foks-m3-optimized-2025-0001",
+      "Custom Command": "Yes",
+      "Command": "/bin/zsh -lc 'cd \"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence\" && if [ -d backend/.venv_foks ]; then source backend/.venv_foks/bin/activate; fi && export PYTHONPATH=\"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend:${PYTHONPATH:-}\" && export FOKS_ROOT=\"$HOME/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence\" && clear && echo \"🚀 FoKS Intelligence — M3 Optimized\" && echo \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\" && echo \"\" && echo \"📍 Working directory:\" && pwd && echo \"\" && echo \"🐍 Python:\" && python --version 2>/dev/null || echo \"⚠️  Python not found\" && echo \"\" && if [ -n \"${VIRTUAL_ENV:-}\" ]; then echo \"✅ Venv active: $VIRTUAL_ENV\"; else echo \"⚠️  Venv not activated\"; fi && echo \"\" && echo \"🌐 FoKS API:\" && echo \"  http://localhost:8000\" && echo \"\" && echo \"💡 Quick commands:\" && echo \"  make run      # start backend (port 8000)\" && echo \"  make test     # run tests\" && echo \"  make lint     # code quality\" && echo \"  ops/scripts/foks_boot.sh  # full boot\" && echo \"\" && exec /bin/zsh'",
+      "Working Directory": "/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence",
+      "Badge Text": "FoKS\nM3",
+      "Use Custom Badge": true,
+      "Use Custom Window Title": true,
+      "Custom Window Title": "FoKS Intelligence — M3 Optimized",
+      "Tags": ["foks", "m3", "optimized", "apple-silicon"],
+      
+      "Normal Font": "JetBrainsMonoNerdFontComplete-Regular 13",
+      "Use Non-ASCII Font": false,
+      "Use Italic Font": true,
+      "Ambiguous Double Width": false,
+      
+      "Terminal": {
+        "Scrollback Lines": 50000,
+        "Character Encoding": 4,
+        "Silence Bell": true,
+        "Close Sessions On End": true,
+        "Sync Title": false,
+        "Disable Window Resizing": false
+      },
+      
+      "Screen": {
+        "GPU Rendering": true,
+        "Flash on Bell": false,
+        "Allow Title Reporting": true
+      },
+      
+      "Colors": {
+        "Ansi 0 Color": {
+          "Red Component": 0.11,
+          "Green Component": 0.11,
+          "Blue Component": 0.13,
+          "Alpha Component": 1.0
+        },
+        "Ansi 1 Color": {
+          "Red Component": 0.95,
+          "Green Component": 0.3,
+          "Blue Component": 0.3,
+          "Alpha Component": 1.0
+        },
+        "Ansi 2 Color": {
+          "Red Component": 0.3,
+          "Green Component": 0.7,
+          "Blue Component": 0.4,
+          "Alpha Component": 1.0
+        },
+        "Ansi 3 Color": {
+          "Red Component": 0.95,
+          "Green Component": 0.7,
+          "Blue Component": 0.3,
+          "Alpha Component": 1.0
+        },
+        "Ansi 4 Color": {
+          "Red Component": 0.3,
+          "Green Component": 0.5,
+          "Blue Component": 0.95,
+          "Alpha Component": 1.0
+        },
+        "Ansi 5 Color": {
+          "Red Component": 0.8,
+          "Green Component": 0.4,
+          "Blue Component": 0.9,
+          "Alpha Component": 1.0
+        },
+        "Ansi 6 Color": {
+          "Red Component": 0.3,
+          "Green Component": 0.8,
+          "Blue Component": 0.9,
+          "Alpha Component": 1.0
+        },
+        "Ansi 7 Color": {
+          "Red Component": 0.8,
+          "Green Component": 0.8,
+          "Blue Component": 0.85,
+          "Alpha Component": 1.0
+        },
+        "Ansi 8 Color": {
+          "Red Component": 0.4,
+          "Green Component": 0.4,
+          "Blue Component": 0.45,
+          "Alpha Component": 1.0
+        },
+        "Ansi 9 Color": {
+          "Red Component": 1.0,
+          "Green Component": 0.4,
+          "Blue Component": 0.4,
+          "Alpha Component": 1.0
+        },
+        "Ansi 10 Color": {
+          "Red Component": 0.4,
+          "Green Component": 0.9,
+          "Blue Component": 0.5,
+          "Alpha Component": 1.0
+        },
+        "Ansi 11 Color": {
+          "Red Component": 1.0,
+          "Green Component": 0.85,
+          "Blue Component": 0.4,
+          "Alpha Component": 1.0
+        },
+        "Ansi 12 Color": {
+          "Red Component": 0.4,
+          "Green Component": 0.6,
+          "Blue Component": 1.0,
+          "Alpha Component": 1.0
+        },
+        "Ansi 13 Color": {
+          "Red Component": 0.9,
+          "Green Component": 0.5,
+          "Blue Component": 1.0,
+          "Alpha Component": 1.0
+        },
+        "Ansi 14 Color": {
+          "Red Component": 0.4,
+          "Green Component": 0.9,
+          "Blue Component": 1.0,
+          "Alpha Component": 1.0
+        },
+        "Ansi 15 Color": {
+          "Red Component": 1.0,
+          "Green Component": 1.0,
+          "Blue Component": 1.0,
+          "Alpha Component": 1.0
+        },
+        "Background Color": {
+          "Red Component": 0.11,
+          "Green Component": 0.11,
+          "Blue Component": 0.13,
+          "Alpha Component": 1.0
+        },
+        "Foreground Color": {
+          "Red Component": 0.8,
+          "Green Component": 0.8,
+          "Blue Component": 0.85,
+          "Alpha Component": 1.0
+        },
+        "Cursor Color": {
+          "Red Component": 0.8,
+          "Green Component": 0.8,
+          "Blue Component": 0.85,
+          "Alpha Component": 1.0
+        },
+        "Selected Text Color": {
+          "Red Component": 0.11,
+          "Green Component": 0.11,
+          "Blue Component": 0.13,
+          "Alpha Component": 1.0
+        },
+        "Selection Color": {
+          "Red Component": 0.4,
+          "Green Component": 0.5,
+          "Blue Component": 0.6,
+          "Alpha Component": 0.3
+        }
+      },
+      
+      "Tab Color": {
+        "Red Component": 0.1,
+        "Green Component": 0.2,
+        "Blue Component": 0.4,
+        "Alpha Component": 1.0
+      },
+      
+      "Status Bar Enabled": true,
+      "Status Bar Components": [
+        {
+          "type": "cpu_utilization",
+          "configuration": {}
+        },
+        {
+          "type": "memory_usage",
+          "configuration": {}
+        },
+        {
+          "type": "network_throughput",
+          "configuration": {}
+        },
+        {
+          "type": "clock",
+          "configuration": {
+            "format": "%H:%M:%S"
+          }
+        },
+        {
+          "type": "current_directory",
+          "configuration": {}
+        }
+      ],
+      
+      "Triggers": [
+        {
+          "regex": "Application startup complete|Uvicorn running|INFO.*Application startup",
+          "action": "HighlightTrigger",
+          "parameter": "{#00ff00,}"
+        },
+        {
+          "regex": "ERROR|CRITICAL|Exception|Traceback|FAILED|Failed",
+          "action": "HighlightTrigger",
+          "parameter": "{#ff0000,#ffff00}"
+        },
+        {
+          "regex": "WARNING|WARN",
+          "action": "HighlightTrigger",
+          "parameter": "{#ffaa00,}"
+        },
+        {
+          "regex": "INFO|DEBUG",
+          "action": "HighlightTrigger",
+          "parameter": "{#00aaff,}"
+        },
+        {
+          "regex": "http://localhost:8000|http://127.0.0.1:8000",
+          "action": "URLAction",
+          "parameter": "\\0"
+        }
+      ],
+      
+      "Keyboard Shortcut": "0x3,0x3e",
+      "Hotkey Window": false,
+      
+      "Description": "FoKS Intelligence profile optimized for M3 MacBook Air 15-inch (fanless). Includes auto-venv activation, GPU rendering with thermal gates, 50k scrollback buffer, Catppuccin Mocha colors, and status bar monitoring. Auto-activates backend/.venv_foks and sets PYTHONPATH."
+    }
+  ]
+}
+

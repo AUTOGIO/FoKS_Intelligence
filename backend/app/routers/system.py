@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import platform
 import sys
-from typing import Dict
 
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 from app.config import settings
+from app.services.identity_guard import identity_guard
 from app.services.logging_utils import get_logger
 from app.services.monitoring import monitoring
 from app.utils.db_monitoring import get_database_stats
@@ -19,8 +20,19 @@ router = APIRouter(prefix="/system", tags=["system"])
 logger = get_logger("system_router")
 
 
+class LockedModelsResponse(BaseModel):
+    """Response schema for locked model configuration."""
+
+    chat: str
+    reasoning: str
+    embedding: str
+    vision: str
+    scientific: str
+    identity_guard_enabled: bool
+
+
 @router.get("/info")
-async def system_info() -> Dict:
+async def system_info() -> dict:
     """
     Get system information including M3-specific details.
 
@@ -53,7 +65,7 @@ async def system_info() -> Dict:
 
 
 @router.get("/recommendations")
-async def get_recommendations() -> Dict:
+async def get_recommendations() -> dict:
     """
     Get hardware-specific recommendations for model configuration.
 
@@ -65,7 +77,7 @@ async def get_recommendations() -> Dict:
 
 
 @router.get("/metrics")
-async def get_metrics() -> Dict:
+async def get_metrics() -> dict:
     """
     Get application metrics (alias for /metrics).
 
@@ -76,7 +88,7 @@ async def get_metrics() -> Dict:
 
 
 @router.get("/database/stats")
-async def database_stats() -> Dict:
+async def database_stats() -> dict:
     """
     Get database statistics including size and record counts.
 
@@ -85,4 +97,46 @@ async def database_stats() -> Dict:
     """
     logger.info("Database stats requested")
     return get_database_stats()
+
+
+@router.get("/models", response_model=LockedModelsResponse)
+async def get_locked_models() -> LockedModelsResponse:
+    """
+    Get FoKS-locked default models.
+
+    Returns only the locked model configuration from FoKS settings.
+    Does NOT expose LM Studio's dynamic inventory.
+
+    This endpoint is read-only and returns deterministic, config-driven values.
+
+    Returns:
+        LockedModelsResponse: Locked model configuration for each task type
+    """
+    logger.info("Locked models requested")
+    return LockedModelsResponse(
+        chat=settings.locked_chat_model,
+        reasoning=settings.locked_reasoning_model,
+        embedding=settings.locked_embedding_model,
+        vision=settings.locked_vision_model,
+        scientific=settings.locked_scientific_model,
+        identity_guard_enabled=identity_guard.enabled,
+    )
+
+
+@router.get("/identity-guard/status")
+async def identity_guard_status() -> dict:
+    """
+    Get current identity guard status and configuration.
+
+    Returns:
+        dict: Identity guard status including enabled state and pattern count
+    """
+    logger.info("Identity guard status requested")
+    patterns = identity_guard.get_compiled_patterns()
+    return {
+        "enabled": identity_guard.enabled,
+        "pattern_count": len(patterns),
+        "system_prompt_length": len(identity_guard.system_prompt),
+        "fallback_response_configured": bool(settings.local_fallback_response),
+    }
 

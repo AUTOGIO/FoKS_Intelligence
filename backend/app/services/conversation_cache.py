@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 from app.services.logging_utils import get_logger
 
@@ -23,10 +23,10 @@ class ConversationCache:
         """
         self.max_size = max_size
         self.ttl_seconds = ttl_seconds
-        self._cache: Dict[int, Dict[str, Any]] = {}
-        self._access_times: Dict[int, float] = {}
+        self._cache: dict[int, dict[str, Any]] = {}
+        self._access_times: dict[int, float] = {}
 
-    def get(self, conversation_id: int) -> Optional[Dict[str, Any]]:
+    def get(self, conversation_id: int) -> dict[str, Any] | None:
         """
         Get conversation from cache.
 
@@ -50,7 +50,7 @@ class ConversationCache:
         self._access_times[conversation_id] = time.time()
         return self._cache[conversation_id]
 
-    def set(self, conversation_id: int, data: Dict[str, Any]) -> None:
+    def set(self, conversation_id: int, data: dict[str, Any]) -> None:
         """
         Store conversation in cache.
 
@@ -110,7 +110,7 @@ class ConversationCache:
         if expired_ids:
             logger.debug("Cleaned up %d expired cache entries", len(expired_ids))
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get cache statistics.
 

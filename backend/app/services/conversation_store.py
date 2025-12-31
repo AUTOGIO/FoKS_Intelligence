@@ -4,12 +4,9 @@ from __future__ import annotations
 
 import time
 from datetime import datetime
-from typing import List, Optional
 
-from sqlalchemy.exc import OperationalError, DisconnectionError
+from sqlalchemy.exc import DisconnectionError, OperationalError
 
-from app.config import settings
-from app.models import conversation
 from app.models.conversation import Conversation, Message, SessionLocal
 from app.services.logging_utils import get_logger
 
@@ -60,7 +57,7 @@ class ConversationStore:
                 else:
                     logger.error("Database operation failed after %d retries", max_retries)
                     raise
-            except Exception as exc:
+            except Exception:
                 # Don't retry on non-connection errors
                 raise
 
@@ -70,7 +67,7 @@ class ConversationStore:
     def create_conversation(
         self,
         user_id: str,
-        title: Optional[str] = None,
+        title: str | None = None,
         source: str = "shortcuts",
     ) -> Conversation:
         """
@@ -100,7 +97,7 @@ class ConversationStore:
 
         return self._retry_db_operation(_create)
 
-    def get_conversation(self, conversation_id: int, user_id: Optional[str] = None) -> Optional[Conversation]:
+    def get_conversation(self, conversation_id: int, user_id: str | None = None) -> Conversation | None:
         """
         Get conversation by ID.
 
@@ -121,7 +118,7 @@ class ConversationStore:
         user_id: str,
         limit: int = 50,
         offset: int = 0,
-    ) -> List[Conversation]:
+    ) -> list[Conversation]:
         """
         List conversations for a user.
 
@@ -193,7 +190,7 @@ class ConversationStore:
         logger.info("Added message to conversation %d", conversation_id)
         return message
 
-    def get_messages(self, conversation_id: int) -> List[Message]:
+    def get_messages(self, conversation_id: int) -> list[Message]:
         """
         Get all messages for a conversation.
 
@@ -210,7 +207,7 @@ class ConversationStore:
             .all()
         )
 
-    def delete_conversation(self, conversation_id: int, user_id: Optional[str] = None) -> bool:
+    def delete_conversation(self, conversation_id: int, user_id: str | None = None) -> bool:
         """
         Delete a conversation.
 

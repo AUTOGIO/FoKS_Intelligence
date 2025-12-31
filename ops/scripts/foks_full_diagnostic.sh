@@ -62,24 +62,13 @@ if [[ -d "$BACKEND_DIR" ]]; then
 fi
 echo ""
 echo "=== 5. FBP Backend Integration ==="
-FBP_TRANSPORT="${FBP_TRANSPORT:-socket}"
-FBP_SOCKET_PATH="${FBP_SOCKET_PATH:-/tmp/fbp.sock}"
-FBP_PORT="${FBP_PORT:-8000}"
+FBP_PORT="${FBP_PORT:-9500}"
 FBP_URL="${FBP_URL:-http://localhost:${FBP_PORT}}"
-if [[ "$FBP_TRANSPORT" == "socket" ]]; then
-    if check curl --unix-socket "$FBP_SOCKET_PATH" -s --max-time 5 http://localhost/socket-health; then
-        info "FBP health OK (UNIX socket)"
-        check curl --unix-socket "$FBP_SOCKET_PATH" -s --max-time 5 http://localhost/api/nfa/test || warn "FBP NFA" "Endpoint may not be available"
-    else
-        warn "FBP" "Cannot reach UNIX socket at $FBP_SOCKET_PATH"
-    fi
+if check curl -s --max-time 5 "$FBP_URL/health"; then
+    info "FBP health OK (port ${FBP_PORT})"
+    check curl -s --max-time 5 "$FBP_URL/api/nfa/test" || warn "FBP NFA" "Endpoint may not be available"
 else
-    if check curl -s --max-time 5 "$FBP_URL/socket-health"; then
-        info "FBP health OK (TCP)"
-        check curl -s --max-time 5 "$FBP_URL/api/nfa/test" || warn "FBP NFA" "Endpoint may not be available"
-    else
-        warn "FBP" "Cannot reach $FBP_URL"
-    fi
+    warn "FBP" "Cannot reach $FBP_URL"
 fi
 echo ""
 echo "=== 6. Playwright Environment ==="

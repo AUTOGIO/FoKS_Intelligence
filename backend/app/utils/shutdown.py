@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import signal
 import sys
-from typing import Callable, List
+from collections.abc import Callable
 
 from app.services.logging_utils import get_logger
 
 logger = get_logger("shutdown")
 
-_shutdown_handlers: List[Callable[[], None]] = []
+_shutdown_handlers: list[Callable[[], None]] = []
 
 
 def register_shutdown_handler(handler: Callable[[], None]) -> None:

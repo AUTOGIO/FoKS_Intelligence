@@ -1,0 +1,28 @@
+{
+  "Profiles": [
+    {
+      "Guid": "fbp-backend-0001-0000-0000-000000000001",
+      "Name": "FBP Backend",
+      "Badge Text": "FBP Backend",
+      "Use Custom Badge": true,
+      "Working Directory": "$HOME/Documents/FBP_Backend",
+      "Custom Command": "Yes",
+      "Command": "/bin/bash scripts/start.sh",
+      "Tab Color": {
+        "Red Component": 0.4,
+        "Green Component": 0.1,
+        "Blue Component": 0.1
+      },
+      "Foreground Color": {
+        "Red Component": 0.9,
+        "Green Component": 0.6,
+        "Blue Component": 0.6
+      },
+      "Background Color": {
+        "Red Component": 0.15,
+        "Green Component": 0.05,
+        "Blue Component": 0.05
+      }
+    }
+  ]
+}

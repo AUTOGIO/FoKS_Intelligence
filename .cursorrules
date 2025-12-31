@@ -1,0 +1,11 @@
+---
+# ARCHITECTURAL AUTHORITY — READ FIRST
+
+Before proposing, modifying, or executing ANY automation,
+the agent MUST read and respect:
+
+docs/ARCHITECTURE_LAYERS.md
+
+Any solution that violates the architecture layers
+must be flagged as INVALID, even if it appears to work.
+---

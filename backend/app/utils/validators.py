@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, Tuple
+from typing import Any
 from urllib.parse import urlparse
 
 from app.services.logging_utils import get_logger
@@ -68,7 +68,44 @@ def sanitize_text(text: str, max_length: int = 10000) -> str:
     return sanitized
 
 
-def validate_task_params(task_name: str, params: Dict[str, Any]) -> Tuple[bool, str]:
+def validate_cpf(cpf: str) -> tuple[bool, str]:
+    """
+    Validate Brazilian CPF (Cadastro de Pessoa Física) format.
+
+    Accepts CPF in formats:
+    - 12345678901 (11 digits)
+    - 123.456.789-01 (formatted)
+
+    Args:
+        cpf: CPF string to validate
+
+    Returns:
+        tuple: (is_valid, error_message)
+    """
+    if not isinstance(cpf, str):
+        return False, "CPF must be a string"
+
+    # Remove formatting (dots and dashes)
+    cpf_clean = re.sub(r"[.\-]", "", cpf.strip())
+
+    # Must be exactly 11 digits
+    if not cpf_clean.isdigit():
+        return False, "CPF must contain only digits (formatting allowed)"
+
+    if len(cpf_clean) != 11:
+        return False, "CPF must have exactly 11 digits"
+
+    # Check for invalid patterns (all same digit)
+    if len(set(cpf_clean)) == 1:
+        return False, "CPF cannot have all identical digits"
+
+    # Basic validation: check verification digits
+    # This is a simplified check - full CPF validation would verify both check digits
+    # For now, we just ensure it's not obviously invalid
+    return True, ""
+
+
+def validate_task_params(task_name: str, params: dict[str, Any]) -> tuple[bool, str]:
     """
     Validate task parameters.
 

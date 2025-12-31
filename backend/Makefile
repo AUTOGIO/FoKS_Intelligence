@@ -35,7 +35,10 @@ clean:
 	rm -rf .pytest_cache .coverage htmlcov .mypy_cache
 
 run:
-	uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+	# Dev-only server (production runs on port 8000 via ops/scripts/foks_boot.sh)
+	# Always use python -m uvicorn to ensure backend/.venv_foks is used
+	# Never rely on system uvicorn binaries
+	python -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
 
 dev: format lint type-check test
 

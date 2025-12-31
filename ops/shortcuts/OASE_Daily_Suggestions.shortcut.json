@@ -1,0 +1,160 @@
+{
+  "WFWorkflowActions": [
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getcontentsofurl",
+      "WFWorkflowActionParameters": {
+        "WFURL": "http://localhost:8000/oase/suggestions/today",
+        "WFHTTPMethod": "GET",
+        "WFHTTPHeaders": {},
+        "WFHTTPBodyType": "JSON"
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getvalueforkey",
+      "WFWorkflowActionParameters": {
+        "WFDictionaryKey": "has_suggestions",
+        "WFInput": {
+          "Value": {
+            "OutputName": "Contents of URL",
+            "OutputUUID": "contents-of-url-uuid"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.conditional",
+      "WFWorkflowActionParameters": {
+        "WFCondition": "Equals",
+        "WFInput": {
+          "Value": {
+            "OutputName": "Dictionary Value",
+            "OutputUUID": "dictionary-value-uuid"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        },
+        "WFConditionalActionString": "true"
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.notification",
+      "WFWorkflowActionParameters": {
+        "WFNotificationActionBody": "No automation suggestions today 🎉",
+        "WFNotificationActionTitle": "OASE Suggestions"
+      },
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getvalueforkey",
+      "WFWorkflowActionParameters": {
+        "WFDictionaryKey": "suggestions",
+        "WFInput": {
+          "Value": {
+            "OutputName": "Contents of URL",
+            "OutputUUID": "contents-of-url-uuid"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.repeatwitheach",
+      "WFWorkflowActionParameters": {
+        "WFInput": {
+          "Value": {
+            "OutputName": "Dictionary Value",
+            "OutputUUID": "suggestions-list-uuid"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getvalueforkey",
+      "WFWorkflowActionParameters": {
+        "WFDictionaryKey": "summary",
+        "WFInput": {
+          "Value": {
+            "OutputName": "Repeat Item",
+            "OutputUUID": "repeat-item-uuid"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getvalueforkey",
+      "WFWorkflowActionParameters": {
+        "WFDictionaryKey": "confidence",
+        "WFInput": {
+          "Value": {
+            "OutputName": "Repeat Item",
+            "OutputUUID": "repeat-item-uuid"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.getvalueforkey",
+      "WFWorkflowActionParameters": {
+        "WFDictionaryKey": "estimated_time_saved_min_per_week",
+        "WFInput": {
+          "Value": {
+            "OutputName": "Repeat Item",
+            "OutputUUID": "repeat-item-uuid"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.text",
+      "WFWorkflowActionParameters": {
+        "WFTextActionText": "• Summary: [Summary]\n  Confidence: [Confidence]%\n  Time saved: ~[Time Saved] min/week\n"
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.choosefrommenu",
+      "WFWorkflowActionParameters": {
+        "WFMenuItems": [
+          "Review Later",
+          "Open FoKS Dashboard",
+          "Copy Summaries"
+        ],
+        "WFMenuPrompt": "What would you like to do?"
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.openurl",
+      "WFWorkflowActionParameters": {
+        "WFURL": "http://localhost:8000/docs"
+      }
+    },
+    {
+      "WFWorkflowActionIdentifier": "is.workflow.actions.copytoclipboard",
+      "WFWorkflowActionParameters": {
+        "WFInput": {
+          "Value": {
+            "OutputName": "Formatted Text",
+            "OutputUUID": "formatted-text-uuid"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    }
+  ],
+  "WFWorkflowClientRelease": "2.0",
+  "WFWorkflowClientVersion": "900",
+  "WFWorkflowIcon": {
+    "WFWorkflowIconGlyphNumber": 59507,
+    "WFWorkflowIconStartColor": 4282601983
+  },
+  "WFWorkflowInputContentItemClasses": [
+    "WFStringContentItem"
+  ],
+  "WFWorkflowMinimumClientVersion": 900,
+  "WFWorkflowMinimumClientVersionString": "900",
+  "WFWorkflowTypes": [
+    "NCWidget",
+    "WatchKit"
+  ]
+}
+

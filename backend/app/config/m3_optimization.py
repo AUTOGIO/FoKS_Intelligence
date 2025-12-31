@@ -11,10 +11,8 @@ Designed for iMac M3 (8 cores: 4P+4E, 16 GB RAM) with macOS 26 Beta.
 
 import asyncio
 import logging
-import sys
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 

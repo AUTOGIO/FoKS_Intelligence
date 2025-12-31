@@ -3,14 +3,16 @@ from __future__ import annotations
 import asyncio
 import json
 import time
+from collections.abc import AsyncGenerator, Callable
 from dataclasses import dataclass
-from typing import Any, AsyncGenerator, Callable, Dict, List, Optional
+from typing import Any
 
 import httpx
 
 from app.config import settings
 from app.models import ChatMessage
 from app.services import model_registry
+from app.services.identity_guard import identity_guard, sanitize_response
 from app.services.logging_utils import get_logger
 from app.services.model_registry import ModelInfo
 
@@ -25,9 +27,9 @@ class LMStudioResult:
     duration_ms: int = 0
     input_tokens: int = 0
     output_tokens: int = 0
-    raw: Optional[Dict[str, Any]] = None
+    raw: dict[str, Any] | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "model": self.model,
             "provider": self.provider,
@@ -44,8 +46,8 @@ class LMStudioClientError(RuntimeError):
         self,
         message: str,
         *,
-        status: Optional[int] = None,
-        details: Optional[Dict[str, Any]] = None,
+        status: int | None = None,
+        details: dict[str, Any] | None = None,
     ) -> None:
         super().__init__(message)
         self.status = status
@@ -58,10 +60,10 @@ ClientFactory = Callable[[], httpx.AsyncClient]
 class LMStudioClient:
     """OpenAI-compatible client for local LM Studio (chat, embeddings, vision, streaming)."""
 
-    def __init__(self, *, client_factory: Optional[ClientFactory] = None) -> None:
+    def __init__(self, *, client_factory: ClientFactory | None = None) -> None:
         self.base_url = settings.lmstudio_base_url.rstrip("/")
         self._client_factory = client_factory
-        self._client: Optional[httpx.AsyncClient] = None
+        self._client: httpx.AsyncClient | None = None
 
     async def _get_client(self) -> httpx.AsyncClient:
         if self._client is None:
@@ -87,13 +89,13 @@ class LMStudioClient:
         suffix = path if path.startswith("/") else f"/{path}"
         return f"{base}{suffix}"
 
-    def _headers(self) -> Dict[str, str]:
+    def _headers(self) -> dict[str, str]:
         headers = {"Content-Type": "application/json"}
         if settings.lmstudio_api_key:
             headers["Authorization"] = f"Bearer {settings.lmstudio_api_key}"
         return headers
 
-    def _select_model(self, model_name: Optional[str], task_type: str, require_tools: bool) -> ModelInfo:
+    def _select_model(self, model_name: str | None, task_type: str, require_tools: bool) -> ModelInfo:
         if model_name:
             return model_registry.resolve_model(model_name)
         normalized = (task_type or "chat").lower()
@@ -106,8 +108,19 @@ class LMStudioClient:
         except ValueError:
             return model_registry.get_default_model("chat")
 
-    def _serialize_messages(self, message: str, history: Optional[List[ChatMessage]]) -> List[Dict[str, str]]:
-        serialized: List[Dict[str, str]] = []
+    def _serialize_messages(self, message: str, history: list[ChatMessage] | None) -> list[dict[str, str]]:
+        """
+        Serialize chat messages for LM Studio payload.
+
+        When identity guard is enabled, injects LOCAL_SYSTEM_PROMPT as the first message
+        to enforce local AI identity and prevent cloud provider references.
+        """
+        serialized: list[dict[str, str]] = []
+
+        # Inject local system prompt FIRST when identity guard is enabled
+        if identity_guard.should_inject_system_prompt():
+            serialized.append(identity_guard.build_system_message())
+
         if history:
             for item in history:
                 payload = item.model_dump() if hasattr(item, "model_dump") else {"role": item.role, "content": item.content}
@@ -115,7 +128,7 @@ class LMStudioClient:
         serialized.append({"role": "user", "content": message})
         return serialized
 
-    def _usage_stats(self, data: Dict[str, Any]) -> Dict[str, int]:
+    def _usage_stats(self, data: dict[str, Any]) -> dict[str, int]:
         usage = data.get("usage") or {}
         completion = usage.get("completion_tokens")
         if completion is None:
@@ -149,10 +162,10 @@ class LMStudioClient:
     async def _request_json(
         self,
         url: str,
-        payload: Dict[str, Any],
+        payload: dict[str, Any],
         *,
-        timeout: Optional[float] = None,
-    ) -> tuple[Dict[str, Any], int]:
+        timeout: float | None = None,
+    ) -> tuple[dict[str, Any], int]:
         headers = self._headers()
         start = time.perf_counter()
 
@@ -174,10 +187,10 @@ class LMStudioClient:
     def _result_from_payload(
         self,
         model_info: ModelInfo,
-        data: Dict[str, Any],
+        data: dict[str, Any],
         duration_ms: int,
         response: Any,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         usage = self._usage_stats(data)
         return LMStudioResult(
             model=model_info.name,
@@ -192,11 +205,11 @@ class LMStudioClient:
         self,
         message: str,
         *,
-        history: Optional[List[ChatMessage]] = None,
-        model_name: Optional[str] = None,
+        history: list[ChatMessage] | None = None,
+        model_name: str | None = None,
         task_type: str = "chat",
         tools_required: bool = False,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         model_info = self._select_model(model_name, task_type, tools_required)
         payload = {
             "model": model_info.name,
@@ -204,13 +217,17 @@ class LMStudioClient:
         }
         data, duration = await self._request_json(self._build_url("/chat/completions"), payload)
         reply = self._extract_text(data)
+
+        # Sanitize response for cloud identity leakage when guard is enabled
+        reply = sanitize_response(reply)
+
         logger.info(
             "LM Studio chat completed",
             extra={"payload": {"model": model_info.name, "duration_ms": duration}},
         )
         return self._result_from_payload(model_info, data, duration, reply)
 
-    async def embeddings(self, text: str, *, model_name: Optional[str] = None) -> Dict[str, Any]:
+    async def embeddings(self, text: str, *, model_name: str | None = None) -> dict[str, Any]:
         model_info = self._select_model(model_name, "embeddings", False)
         payload = {"model": model_info.name, "input": text}
         data, duration = await self._request_json(self._build_url("/embeddings"), payload)
@@ -222,23 +239,31 @@ class LMStudioClient:
         *,
         image_base64: str,
         prompt: str,
-        model_name: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        model_name: str | None = None,
+    ) -> dict[str, Any]:
         model_info = self._select_model(model_name, "vision", False)
+
+        # Build messages list with optional system prompt injection
+        messages: list[dict[str, Any]] = []
+        if identity_guard.should_inject_system_prompt():
+            messages.append(identity_guard.build_system_message())
+
+        messages.append(
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt},
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/png;base64,{image_base64}"},
+                    },
+                ],
+            }
+        )
+
         payload = {
             "model": model_info.name,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": f"data:image/png;base64,{image_base64}"},
-                        },
-                    ],
-                }
-            ],
+            "messages": messages,
         }
         data, duration = await self._request_json(
             self._build_url("/chat/completions"),
@@ -246,17 +271,29 @@ class LMStudioClient:
             timeout=settings.stream_timeout_seconds,
         )
         reply = self._extract_text(data)
+
+        # Sanitize response for cloud identity leakage when guard is enabled
+        reply = sanitize_response(reply)
+
         return self._result_from_payload(model_info, data, duration, reply)
 
     async def stream_chat(
         self,
         message: str,
         *,
-        history: Optional[List[ChatMessage]] = None,
-        model_name: Optional[str] = None,
+        history: list[ChatMessage] | None = None,
+        model_name: str | None = None,
         task_type: str = "chat",
         tools_required: bool = False,
-    ) -> AsyncGenerator[Dict[str, Any], None]:
+    ) -> AsyncGenerator[dict[str, Any], None]:
+        """
+        Stream chat responses from LM Studio.
+
+        Note: System prompt injection is applied via _serialize_messages().
+        Response sanitization is NOT applied to streaming responses as it would
+        require buffering the entire response, defeating the purpose of streaming.
+        The system prompt provides the primary protection against identity leakage.
+        """
         model_info = self._select_model(model_name, task_type, tools_required)
         payload = {
             "model": model_info.name,
@@ -314,14 +351,14 @@ class LMStudioClient:
             raise LMStudioClientError("LM Studio streaming connection error") from exc
 
     @staticmethod
-    def _extract_text(data: Dict[str, Any]) -> str:
+    def _extract_text(data: dict[str, Any]) -> str:
         try:
             return data["choices"][0]["message"]["content"].strip()
         except (KeyError, IndexError, AttributeError):
             return ""
 
     @staticmethod
-    def _extract_embedding(data: Dict[str, Any]) -> List[float]:
+    def _extract_embedding(data: dict[str, Any]) -> list[float]:
         try:
             return data["data"][0]["embedding"]
         except (KeyError, IndexError, TypeError):

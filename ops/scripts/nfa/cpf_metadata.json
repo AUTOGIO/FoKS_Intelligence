@@ -1,0 +1,46 @@
+{
+  "description": "Metadata for CPF entries including codes and descriptions",
+  "note": "This file stores additional information associated with CPF entries",
+  "entries": [
+    {
+      "codes": ["RN13", "RO03", "RO04"],
+      "description": "Remessa por conta de contrato de locação",
+      "note": "Codes and description from image provided for NFA emission"
+    }
+  ],
+  "cpf_partials_from_image": [
+    {
+      "partial_7digits": "1806892",
+      "note": "7-digit partial CPF - needs completion to 11 digits"
+    },
+    {
+      "partial_7digits": "0136276",
+      "note": "7-digit partial CPF - needs completion to 11 digits"
+    },
+    {
+      "partial_7digits": "9264208",
+      "note": "7-digit partial CPF - needs completion to 11 digits"
+    },
+    {
+      "partial_7digits": "4356436",
+      "note": "7-digit partial CPF - needs completion to 11 digits"
+    },
+    {
+      "partial_7digits": "9593518",
+      "note": "7-digit partial CPF - needs completion to 11 digits"
+    },
+    {
+      "partial_7digits": "8201866",
+      "note": "7-digit partial CPF - needs completion to 11 digits"
+    },
+    {
+      "partial_7digits": "0142778",
+      "note": "7-digit partial CPF - needs completion to 11 digits"
+    },
+    {
+      "partial_7digits": "5290467",
+      "note": "7-digit partial CPF - needs completion to 11 digits"
+    }
+  ],
+  "implementation_note": "The image provided shows 7-digit CPF partials (format: XXX.XXX.X). To add these to cpf_batch_list.json, full 11-digit CPF numbers are required. Use add_new_cpfs.py script with complete CPF values to add them to the batch list."
+}

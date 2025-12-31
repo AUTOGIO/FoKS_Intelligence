@@ -5,11 +5,32 @@ from __future__ import annotations
 import time
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Dict, List
+from typing import Any, TypedDict
 
 from app.services.logging_utils import get_logger
 
 logger = get_logger("monitoring")
+
+
+class RequestStats(TypedDict):
+    """Type for request statistics."""
+    total: int
+    success: int
+    failures: int
+    response_times: list[float]
+
+
+class TaskStats(TypedDict):
+    """Type for task statistics."""
+    total: int
+    success: int
+    failures: int
+
+
+class StatsDict(TypedDict):
+    """Type for the main stats dictionary."""
+    requests: RequestStats
+    tasks: TaskStats
 
 
 @dataclass
@@ -20,8 +41,8 @@ class RequestMetrics:
     successful_requests: int = 0
     failed_requests: int = 0
     total_response_time: float = 0.0
-    endpoint_counts: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
-    error_counts: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
+    endpoint_counts: dict[str, int] = field(default_factory=lambda: defaultdict(int))
+    error_counts: dict[str, int] = field(default_factory=lambda: defaultdict(int))
 
 
 @dataclass
@@ -31,8 +52,8 @@ class TaskMetrics:
     total_tasks: int = 0
     successful_tasks: int = 0
     failed_tasks: int = 0
-    task_type_counts: Dict[str, int] = field(default_factory=lambda: defaultdict(int))
-    task_times: List[float] = field(default_factory=list)
+    task_type_counts: dict[str, int] = field(default_factory=lambda: defaultdict(int))
+    task_times: list[float] = field(default_factory=list)
 
 
 class MonitoringService:
@@ -43,7 +64,7 @@ class MonitoringService:
         self.request_metrics = RequestMetrics()
         self.task_metrics = TaskMetrics()
         self.start_time = time.time()
-        self.stats = {
+        self.stats: StatsDict = {
             "requests": {
                 "total": 0,
                 "success": 0,
@@ -115,7 +136,7 @@ class MonitoringService:
         finally:
             self._lock.release()
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get current statistics.
 

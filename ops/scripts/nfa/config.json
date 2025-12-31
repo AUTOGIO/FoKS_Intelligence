@@ -1,0 +1,8 @@
+{
+  "default_matricula": "1595504",
+  "default_output_dir": "/Users/dnigga/Downloads/NFA_Outputs",
+  "atf_base_url": "https://www4.sefaz.pb.gov.br/atf/",
+  "timeout_seconds": 600,
+  "wait_timeout_ms": 30000
+}
+

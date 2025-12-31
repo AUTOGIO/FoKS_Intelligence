@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import time
 from collections import defaultdict
-from typing import Dict, Optional, Tuple
 
 from app.services.logging_utils import get_logger
 
@@ -22,7 +21,7 @@ class TokenBucket:
         self,
         capacity: int,
         refill_rate: float,
-        initial_tokens: Optional[int] = None,
+        initial_tokens: int | None = None,
     ) -> None:
         """
         Initialize token bucket.
@@ -93,7 +92,7 @@ class TokenBucketRateLimiter:
     def __init__(
         self,
         requests_per_minute: int = 60,
-        burst_capacity: Optional[int] = None,
+        burst_capacity: int | None = None,
     ) -> None:
         """
         Initialize token bucket rate limiter.
@@ -105,14 +104,14 @@ class TokenBucketRateLimiter:
         self.requests_per_minute = requests_per_minute
         self.refill_rate = requests_per_minute / 60.0  # Tokens per second
         self.burst_capacity = burst_capacity or requests_per_minute
-        self.buckets: Dict[str, TokenBucket] = defaultdict(
+        self.buckets: dict[str, TokenBucket] = defaultdict(
             lambda: TokenBucket(
                 capacity=self.burst_capacity,
                 refill_rate=self.refill_rate,
             )
         )
 
-    def is_allowed(self, identifier: str, tokens: int = 1) -> Tuple[bool, float]:
+    def is_allowed(self, identifier: str, tokens: int = 1) -> tuple[bool, float]:
         """
         Check if request is allowed.
 

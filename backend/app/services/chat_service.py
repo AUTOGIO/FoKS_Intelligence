@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-from typing import Any, AsyncGenerator, List, Optional
+from typing import Any
 
 from app.models import ChatMessage
 from app.services import model_registry
-from app.services.logging_utils import get_logger
 from app.services.lmstudio_client import LMStudioClient
+from app.services.logging_utils import get_logger
 from app.services.model_registry import ModelInfo
 
 logger = get_logger(__name__)
 _CLIENT = LMStudioClient()
 
 
-def _select_model(model: Optional[str], task_type: str, tools_required: bool) -> ModelInfo:
+def _select_model(model: str | None, task_type: str, tools_required: bool) -> ModelInfo:
     if model:
         return model_registry.resolve_model(model)
     if tools_required:
@@ -25,9 +25,9 @@ def _select_model(model: Optional[str], task_type: str, tools_required: bool) ->
 async def generate_chat_response(
     message: str,
     *,
-    history: Optional[List[ChatMessage]] = None,
+    history: list[ChatMessage] | None = None,
     stream: bool = False,
-    model: Optional[str] = None,
+    model: str | None = None,
     task_type: str = "chat",
     tools_required: bool = False,
 ) -> Any:

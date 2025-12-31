@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # FoKS Intelligence Virtualenv Guard
-# Ensures that when a virtual environment is active, its bin directory is
-# always at the front of PATH (works for bash and zsh).
-set -euo pipefail
+# Ensures that when a virtual environment is active, its bin directory is always at the front of PATH (works for bash and zsh).
+
+# NOTE: This script is sourced inside interactive shells (zsh/bash) so we must not
+# enable strict error modes (set -e/-u/pipefail) globally. Doing so would cause
+# interactive shells to exit with status 1 when any later command fails during
+# startup (e.g., VS Code terminals reporting “Error Code 1”).
 
 if [[ -z ${FOKS_VENV_GUARD_LOADED:-} ]]; then
   export FOKS_VENV_GUARD_LOADED=1

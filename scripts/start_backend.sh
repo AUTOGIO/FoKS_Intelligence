@@ -22,5 +22,7 @@ pip install --upgrade pip >/dev/null 2>&1
 pip install -r requirements.txt >/dev/null 2>&1
 
 echo "[FoKS] Running uvicorn on port 8000..."
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+# Always use python -m uvicorn to ensure .venv_foks is used
+# Never rely on system uvicorn binaries
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 

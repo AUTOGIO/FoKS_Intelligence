@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 from app.config import settings
 from app.models.conversation import create_engine_instance, get_database_url
@@ -13,7 +12,7 @@ from app.services.logging_utils import get_logger
 logger = get_logger("db_monitoring")
 
 
-def get_database_size() -> Dict[str, Any]:
+def get_database_size() -> dict[str, Any]:
     """
     Get database size information.
 
@@ -81,7 +80,7 @@ def get_database_size() -> Dict[str, Any]:
             }
 
 
-def get_database_stats() -> Dict[str, Any]:
+def get_database_stats() -> dict[str, Any]:
     """
     Get comprehensive database statistics.
 

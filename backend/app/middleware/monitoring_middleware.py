@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import time
-from typing import Callable
+from collections.abc import Callable
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from app.services.monitoring import monitoring
 from app.services.logging_utils import get_logger
+from app.services.monitoring import monitoring
 
 logger = get_logger("monitoring_middleware")
 

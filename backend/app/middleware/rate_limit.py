@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from collections.abc import Callable
 from time import time
-from typing import Callable, Dict, List
 
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -35,7 +35,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             self.requests = None
         else:
             self.token_bucket_limiter = None
-            self.requests: Dict[str, List[float]] = defaultdict(list)
+            self.requests: dict[str, list[float]] = defaultdict(list)
 
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         """Check rate limit before processing request."""

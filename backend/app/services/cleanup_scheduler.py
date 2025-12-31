@@ -3,12 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timedelta
-from typing import Optional
-
 import os
 
-from app.config import settings
 from app.services.conversation_store import conversation_store
 from app.services.logging_utils import get_logger
 
@@ -21,7 +17,7 @@ class CleanupScheduler:
     def __init__(self) -> None:
         """Initialize cleanup scheduler."""
         self._running = False
-        self._task: Optional[asyncio.Task] = None
+        self._task: asyncio.Task | None = None
         self.cleanup_days = int(os.getenv("CLEANUP_DAYS", "30"))
         self.cleanup_interval_hours = int(os.getenv("CLEANUP_INTERVAL_Hours", "24"))
 

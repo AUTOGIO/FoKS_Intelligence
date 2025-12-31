@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import APIRouter
 from fastapi.responses import PlainTextResponse
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/metrics", tags=["metrics"])
 
 
 @router.get("")
-async def metrics_root() -> Dict[str, Any]:
+async def metrics_root() -> dict[str, Any]:
     """
     JSON summary metrics endpoint at `/metrics`.
 

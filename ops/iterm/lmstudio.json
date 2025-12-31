@@ -1,0 +1,28 @@
+{
+  "Profiles": [
+    {
+      "Guid": "lmstudio-monitor-0001-0000-0000-000000000001",
+      "Name": "LM Studio Monitor",
+      "Badge Text": "LM Studio",
+      "Use Custom Badge": true,
+      "Working Directory": "$HOME",
+      "Custom Command": "Yes",
+      "Command": "/bin/zsh -lc 'echo \"Monitoring LM Studio…\"; tail -f ~/Library/Logs/LMStudio/*.log 2>/dev/null || echo \"No LM Studio logs found yet. Logs will appear here when LM Studio starts.\"'",
+      "Tab Color": {
+        "Red Component": 0.6,
+        "Green Component": 0.5,
+        "Blue Component": 0.2
+      },
+      "Foreground Color": {
+        "Red Component": 1.0,
+        "Green Component": 0.95,
+        "Blue Component": 0.7
+      },
+      "Background Color": {
+        "Red Component": 0.2,
+        "Green Component": 0.18,
+        "Blue Component": 0.1
+      }
+    }
+  ]
+}

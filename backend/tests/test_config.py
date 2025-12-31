@@ -1,4 +1,3 @@
-from urllib.parse import quote
 from __future__ import annotations
 
 import importlib
@@ -49,7 +48,9 @@ def test_settings_defaults(monkeypatch):
     assert settings.fbp_socket_path == "/tmp/fbp.sock"
     assert settings.fbp_transport == "socket"
     assert settings.fbp_port == 8000
-    assert settings.fbp_base_url == f"http+unix://{quote('/tmp/fbp.sock', safe='')}:"
+    # fbp_base_url returns "http://localhost" for socket transport
+    # The UDS path is handled by httpx.AsyncHTTPTransport(uds=...)
+    assert settings.fbp_base_url == "http://localhost"
     assert settings.default_timeout_seconds == 30
     assert settings.default_retry_attempts == 3
     assert settings.retry_backoff_seconds == 2.0
@@ -86,7 +87,8 @@ def test_settings_env_overrides(monkeypatch):
     assert settings.fbp_socket_path == "/tmp/custom.sock"
     assert settings.fbp_transport == "port"
     assert settings.fbp_port == 9000
-    assert settings.fbp_base_url == "http://localhost:9000"
+    # When transport is "port" and fbp_backend_base_url is set, it takes priority
+    assert settings.fbp_base_url == "http://fbp.local/api"
     assert settings.default_timeout_seconds == 45
     assert settings.default_retry_attempts == 5
     assert settings.retry_backoff_seconds == 1.5

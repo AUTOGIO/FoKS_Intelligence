@@ -1,0 +1,543 @@
+{
+  "metadata": {
+    "generated_at": "2025-12-11T04:22:02.424444",
+    "from_date": "01/01/2024",
+    "to_date": "31/01/2024",
+    "report_type": "NFA_ATF_BATCH"
+  },
+  "summary": {
+    "total_items": 29,
+    "success_count": 0,
+    "failure_count": 29,
+    "success_rate": 0.0,
+    "total_nfas_found": 0,
+    "total_pdfs_downloaded": 0,
+    "error_classifications": {
+      "not_found_error": 29
+    }
+  },
+  "results": [
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"AP01- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"AP01- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.417838",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.418129",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"AP03- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"AP03- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.418383",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.418627",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"AP04- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"AP04- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.418868",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.419106",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"AP02- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"AP02- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.419346",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.419597",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA01- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA01- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.419842",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.420077",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA02- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA02- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.420295",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.420512",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA05- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA05- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.420731",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.420945",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA23- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA23- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.421163",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.421377",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA24- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA24- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.421594",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.421806",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA29- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA29- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.422023",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.422246",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA31- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA31- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.422462",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.422680",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA32- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA32- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.422894",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.423129",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA33- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA33- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.423345",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.423559",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA35- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA35- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.423771",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "}",
+        "cpf": "",
+        "matricula": "}"
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.424017",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    },
+    {
+      "success": false,
+      "employee": {
+        "loja": "\"loja\": \"BA36- Remessa por conta de contrato de locação\"",
+        "cpf": "",
+        "matricula": "\"loja\": \"BA36- Remessa por conta de contrato de locação\""
+      },
+      "nfa_count": 0,
+      "nfa_number": null,
+      "pdfs": [],
+      "danfe_path": null,
+      "dar_path": null,
+      "timestamp": "2025-12-11T04:22:02.424232",
+      "duration_ms": 0,
+      "error": "NFA ATF script not found: /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/ops/scripts/nfa/nfa_atf.py",
+      "error_type": "TaskRunnerError",
+      "error_classification": "not_found_error"
+    }
+  ]
+}

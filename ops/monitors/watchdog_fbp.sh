@@ -27,7 +27,11 @@ log() {
 
 echo "$$" >"$PID_FILE"
 
-HEALTH_URL="${HEALTH_URL:-http://127.0.0.1:8000/health}"
+# FBP can run in socket mode (default) or TCP mode
+# Socket path (preferred):
+SOCKET_PATH="${FBP_SOCKET_PATH:-/tmp/fbp.sock}"
+# TCP fallback URL (for debug mode when FBP_PORT is set):
+TCP_HEALTH_URL="${HEALTH_URL:-http://127.0.0.1:9500/health}"
 CHECK_INTERVAL="${CHECK_INTERVAL:-10}"
 CPU_THRESHOLD="${CPU_THRESHOLD:-95}"
 CPU_WINDOW_SECONDS="${CPU_WINDOW_SECONDS:-30}"
@@ -71,13 +75,28 @@ has_google_error_marker() {
 
 check_health() {
   local body
-  body="$(curl --silent --show-error --max-time 5 "$HEALTH_URL" 2>&1 || true)"
+  local health_ok=false
+  
+  # Try socket first (default mode)
+  if [[ -S "$SOCKET_PATH" ]]; then
+    body="$(curl --silent --show-error --max-time 5 --unix-socket "$SOCKET_PATH" http://localhost/health 2>&1 || true)"
+    if printf '%s' "$body" | grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"'; then
+      consecutive_failures=0
+      log "INFO" "FBP /health OK via socket ($SOCKET_PATH)"
+      return 0
+    fi
+    log "WARN" "FBP socket exists but health failed"
+  fi
+  
+  # Fallback to TCP (for debug mode)
+  body="$(curl --silent --show-error --max-time 5 "$TCP_HEALTH_URL" 2>&1 || true)"
   if printf '%s' "$body" | grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"'; then
     consecutive_failures=0
-    log "INFO" "FBP /health OK at $HEALTH_URL"
+    log "INFO" "FBP /health OK via TCP ($TCP_HEALTH_URL)"
     return 0
   fi
 
+  # Both failed
   if has_google_error_marker "$body"; then
     consecutive_failures=$((consecutive_failures + 1))
     log "WARN" "FBP /health suggests Google/Gmail package issues (consecutive: $consecutive_failures)"
@@ -132,7 +151,7 @@ check_cpu() {
   fi
 }
 
-log "INFO" "Starting FBP watchdog (health: $HEALTH_URL, interval: ${CHECK_INTERVAL}s)"
+log "INFO" "Starting FBP watchdog (socket: $SOCKET_PATH, tcp: $TCP_HEALTH_URL, interval: ${CHECK_INTERVAL}s)"
 
 while true; do
   check_health

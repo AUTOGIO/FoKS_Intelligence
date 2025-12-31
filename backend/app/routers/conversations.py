@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import json
-from typing import List, Optional
+from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
-
-from datetime import datetime
 
 from app.config import settings
 from app.models import (
@@ -124,7 +122,7 @@ async def list_conversations(
 @router.get("/{conversation_id}", response_model=ConversationResponse)
 async def get_conversation(
     conversation_id: int,
-    user_id: Optional[str] = Query(None, description="User identifier for validation"),
+    user_id: str | None = Query(None, description="User identifier for validation"),
 ) -> ConversationResponse:
     """
     Get a conversation by ID.
@@ -164,11 +162,11 @@ async def get_conversation(
     return response
 
 
-@router.get("/{conversation_id}/messages", response_model=List[MessageResponse])
+@router.get("/{conversation_id}/messages", response_model=list[MessageResponse])
 async def get_messages(
     conversation_id: int,
-    user_id: Optional[str] = Query(None, description="User identifier for validation"),
-) -> List[MessageResponse]:
+    user_id: str | None = Query(None, description="User identifier for validation"),
+) -> list[MessageResponse]:
     """
     Get all messages for a conversation.
 
@@ -200,7 +198,7 @@ async def get_messages(
 @router.delete("/{conversation_id}")
 async def delete_conversation(
     conversation_id: int,
-    user_id: Optional[str] = Query(None, description="User identifier for validation"),
+    user_id: str | None = Query(None, description="User identifier for validation"),
 ) -> dict:
     """
     Delete a conversation.
@@ -252,7 +250,7 @@ async def update_conversation_title(
 @router.get("/{conversation_id}/export")
 async def export_conversation(
     conversation_id: int,
-    user_id: Optional[str] = Query(None, description="User identifier for validation"),
+    user_id: str | None = Query(None, description="User identifier for validation"),
     format: str = Query("json", description="Export format: json or jsonl"),
 ) -> JSONResponse:
     """

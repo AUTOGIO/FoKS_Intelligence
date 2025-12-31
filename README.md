@@ -145,6 +145,20 @@ bash ops/scripts/fbp_boot.sh
 
 ---
 
+## Development Setup
+
+### Testing Requirements
+
+To run FoKS test suite:
+
+```bash
+pip install pytest pytest-asyncio
+
+pytest -q
+```
+
+---
+
 ## Ops & Monitoring
 
 The `ops/` folder contains the **FoKS Ops Environment**:
