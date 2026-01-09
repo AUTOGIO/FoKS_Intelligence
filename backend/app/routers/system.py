@@ -5,15 +5,15 @@ from __future__ import annotations
 import platform
 import sys
 
-from fastapi import APIRouter
-from pydantic import BaseModel
-
 from app.config import settings
 from app.services.identity_guard import identity_guard
 from app.services.logging_utils import get_logger
 from app.services.monitoring import monitoring
+from app.services.system_monitor import SystemMonitor
 from app.utils.db_monitoring import get_database_stats
 from app.utils.m3_optimizations import get_system_info, recommend_model_config
+from fastapi import APIRouter
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/system", tags=["system"])
 
@@ -37,7 +37,8 @@ async def system_info() -> dict:
     Get system information including M3-specific details.
 
     Returns:
-        dict: System information including Python version, platform, hardware, and optimizations
+        dict: System information including Python version, platform,
+        hardware, and optimizations
     """
     logger.info("System info requested")
     base_info = {
@@ -140,3 +141,25 @@ async def identity_guard_status() -> dict:
         "fallback_response_configured": bool(settings.local_fallback_response),
     }
 
+
+@router.get("/status")
+async def system_status() -> dict[str, str | float | list[str]]:
+    """
+    Get real-time system telemetry data as JSON.
+
+    This endpoint provides structured system metrics for external monitoring
+    tools (Raycast, dashboards, etc.). Returns the same data source used
+    for LLM context injection, ensuring consistency.
+
+    Returns:
+        dict: System telemetry data including:
+        - host: System hostname
+        - timestamp: Current timestamp
+        - cpu_percent: CPU usage percentage
+        - ram_percent: RAM usage percentage
+        - uptime: System uptime string
+        - active_tasks: List of active workflow status strings
+        - status: Backend status (ONLINE/OFFLINE with mode)
+    """
+    logger.info("System status requested")
+    return SystemMonitor.get_telemetry_data()

@@ -3,9 +3,6 @@ from __future__ import annotations
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
 from app.config import settings
 from app.middleware.auth import AuthMiddleware
 from app.middleware.m3_middleware import M3OptimizationMiddleware
@@ -28,6 +25,8 @@ from app.routers import (
     vision,
 )
 from app.services.logging_utils import get_logger
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 logger = get_logger(__name__)
 
@@ -45,6 +44,7 @@ async def _verify_router_registration(app: FastAPI) -> None:
     # Check for critical system endpoints
     system_models_registered = "/system/models" in routes
     system_identity_guard_registered = "/system/identity-guard/status" in routes
+    system_status_registered = "/system/status" in routes
 
     logger.info(
         "Router registration verified",
@@ -52,12 +52,18 @@ async def _verify_router_registration(app: FastAPI) -> None:
             "total_routes": len(routes),
             "system_routes": system_routes,
             "system_models_registered": system_models_registered,
-            "system_identity_guard_registered": system_identity_guard_registered,
+            "system_identity_guard_registered": (system_identity_guard_registered),
+            "system_status_registered": system_status_registered,
         },
     )
 
-    # Assert critical system endpoints are registered (fail loudly if missing)
-    expected_system_endpoints = ["/system/models", "/system/identity-guard/status"]
+    # Assert critical system endpoints are registered
+    # (fail loudly if missing)
+    expected_system_endpoints = [
+        "/system/models",
+        "/system/identity-guard/status",
+        "/system/status",
+    ]
     missing_endpoints = [ep for ep in expected_system_endpoints if ep not in routes]
 
     if missing_endpoints:
@@ -72,7 +78,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """FastAPI lifespan context manager for startup/shutdown."""
     # Startup
     await _verify_router_registration(app)
-    logger.info("FoKS Intelligence backend started", extra={"environment": settings.environment})
+    logger.info(
+        "FoKS Intelligence backend started",
+        extra={"environment": settings.environment},
+    )
     yield
     # Shutdown
     logger.info("FoKS Intelligence backend shutting down")

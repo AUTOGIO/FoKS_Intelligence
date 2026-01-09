@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <!-- Unique label for this launch agent -->
+    <key>Label</key>
+    <string>com.foks.logrotation</string>
+
+    <!-- Program and arguments -->
+    <key>ProgramArguments</key>
+    <array>
+      <string>/bin/bash</string>
+      <string>-lc</string>
+      <string>/Users/dnigga/Documents/FokS_PROFILE/snippets/rotate_foks_logs_auto.sh</string>
+    </array>
+
+    <!-- Working directory -->
+    <key>WorkingDirectory</key>
+    <string>/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence</string>
+
+    <!-- Schedule: Run daily at 23:30 -->
+    <key>StartCalendarInterval</key>
+    <dict>
+      <key>Hour</key>
+      <integer>23</integer>
+      <key>Minute</key>
+      <integer>30</integer>
+    </dict>
+
+    <!-- Do not run at load, only on schedule -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <!-- Do not keep alive - one-time daily execution -->
+    <!-- KeepAlive is intentionally omitted -->
+
+    <!-- Explicit logging paths (best practice for macOS 15+) -->
+    <key>StandardOutPath</key>
+    <string>/Users/dnigga/Library/Logs/FoKS/com.foks.logrotation.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/dnigga/Library/Logs/FoKS/com.foks.logrotation.err.log</string>
+
+    <!-- Environment variables -->
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>PYTHONUNBUFFERED</key>
+      <string>1</string>
+      <key>PYTHONDONTWRITEBYTECODE</key>
+      <string>1</string>
+    </dict>
+
+    <!-- Resource limits (optional, for consistency with other plists) -->
+    <key>SoftResourceLimits</key>
+    <dict>
+      <key>CPU</key>
+      <integer>300</integer>
+      <key>FileSize</key>
+      <integer>104857600</integer>
+      <key>Memory</key>
+      <integer>268435456</integer>
+    </dict>
+
+  </dict>
+</plist>

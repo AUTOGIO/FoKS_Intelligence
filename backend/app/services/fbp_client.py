@@ -13,6 +13,10 @@ import httpx
 
 from app.config import settings
 from app.services.logging_utils import get_logger
+from app.utils.architectural_assertions import (
+    assert_deterministic_command,
+    assert_evidence_response,
+)
 
 logger = get_logger(__name__)
 
@@ -84,7 +88,7 @@ class FBPClient:
     def _check_socket_exists(self) -> bool:
         """
         Check if FBP socket exists and is accessible.
-        
+
         Performs fast lsof check to detect if process is listening before
         attempting httpx connection, reducing timeout delays.
         """
@@ -232,12 +236,12 @@ class FBPClient:
     async def _execute_with_retry(self, request_coro, endpoint: str):
         """
         Execute request with exponential backoff retry logic.
-        
+
         Retries on:
         - Connection errors (socket missing, connection refused)
         - Timeout errors
         - 5xx server errors
-        
+
         Does NOT retry on:
         - 4xx client errors (bad request, unauthorized, etc.)
         """
@@ -446,15 +450,15 @@ class FBPClient:
     ) -> dict[str, Any]:
         """
         Execute HTTP request to FBP backend with retry logic and error handling.
-        
+
         Args:
             method: HTTP method (GET, POST, etc.)
             endpoint: API endpoint path (e.g., "/health", "/nfa")
             payload: Optional request payload (JSON-serializable dict)
-            
+
         Returns:
             FBPResult dictionary with status, payload, and metadata
-            
+
         Raises:
             FBPClientError: If request fails after retries
         """
@@ -491,18 +495,17 @@ class FBPClient:
             )
             raise
 
-        async def _perform():
-            """Inner coroutine for request execution (used by retry logic)."""
-            try:
-                response = await client.request(method, url, json=payload)
-                response.raise_for_status()
-                return response
-            except httpx.HTTPStatusError:
-                # Re-raise to be handled by retry logic
-                raise
-            except (httpx.TimeoutException, httpx.ConnectError, httpx.RequestError):
-                # Re-raise connection/timeout errors for retry logic
-                raise
+        async def _perform() -> httpx.Response:
+            if payload:
+                assert_deterministic_command(payload)
+
+            client = await self._get_client()
+            return await client.request(
+                method=method,
+                url=url,  # Use url here, not endpoint
+                json=payload,
+                timeout=client.timeout,  # Use client's configured timeout
+            )
 
         try:
             response = await self._execute_with_retry(_perform, url)
@@ -528,19 +531,24 @@ class FBPClient:
         # Parse response
         try:
             response_data = response.json()
-        except Exception:  # noqa: BLE001
+            assert_evidence_response(response_data)
+        except Exception as e:
+            if "Architectural" in type(e).__name__:
+                raise
+
             logger.warning(
-                "FBP response is not valid JSON",
+                "FBP response is not valid JSON or failed compliance",
                 exc_info=True,
                 extra={
                     "payload": {
                         "endpoint": url,
                         "status": response.status_code,
                         "response_text": response.text[:200],
+                        "error": str(e),
                     }
                 },
             )
-            response_data = {"raw_response": response.text[:500]}
+            response_data = {"raw_response": response.text[:500], "compliance_failed": True}
 
         logger.info(
             "FBP request completed",
@@ -577,3 +585,10 @@ class FBPClient:
     async def utils(self, data: dict[str, Any]) -> dict[str, Any]:
         return await self._request("POST", "/utils", data)
 
+    async def run_script(self, script_content: str, timeout: int = 60) -> dict[str, Any]:
+        """
+        Executes a deterministic script on FBP Backend.
+        Fulfills the Bailiff role.
+        """
+        payload = {"script_content": script_content, "timeout": timeout}
+        return await self._request("POST", "/executor/run-bash", payload)

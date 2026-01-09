@@ -1,0 +1,18 @@
+# /Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Intelligence/backend/app/config/modes/work_mode.yaml
+version: '1.0'
+mode_name: 'Work Mode'
+target_hardware: 'Apple M3 iMac'
+
+state:
+  folders:
+    - path: '/Users/dnigga/Documents'
+    - path: '/Users/dnigga/Desktop'
+  applications:
+    - name: 'Vivaldi'
+      path: '/Applications/Vivaldi.app'
+    - name: 'Atlas'
+      path: '/Applications/Atlas.app'
+    - name: 'Visual Studio Code'
+      path: '/Applications/Visual Studio Code.app'
+    - name: 'iTerm'
+      path: '/Applications/iTerm.app'

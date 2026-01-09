@@ -8,13 +8,26 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 ## [Unreleased]
 
 ### Added
-- (placeholder for upcoming changes)
+
+- **FoKS Clients Integration** (2026-01-01):
+  - Raycast Extension: Quick access to FoKS Intelligence from Raycast
+    - Health check command
+    - Quick command (natural language)
+    - NFA trigger form
+    - Task listing
+  - LM Studio Agent: Function calling agent for FoKS Intelligence
+    - 100% local AI via LM Studio
+    - Function calling support (health_check, trigger_nfa, run_task, chat)
+    - Rich CLI interface
+    - M3 optimized
+  - Both clients located in `/Users/dnigga/Documents/_PROJECTS_OFICIAL/FoKS_Clients/`
 
 ---
 
 ## [1.3.0] - Monitoring & System Info
 
 ### Added
+
 - Sistema de métricas completo exposto em `/metrics`.
 - Middleware de monitoramento automático para todas as requisições HTTP.
 - Rastreamento de requests (tempo de resposta, sucesso, erros).
@@ -31,11 +44,13 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 - `scripts/check_health.sh` – script shell para health check completo.
 
 ### Changed
+
 - Métricas agora são coletadas automaticamente em todas as requisições.
 - Tasks passam a registrar tempo de execução.
 - Health check retorna informações mais ricas de estado.
 
 ### Tests
+
 - Testes para `MonitoringService` (7 testes).
 - Testes para helpers (5 testes).
 - Total: 38 testes, todos passando no momento do release.
@@ -45,6 +60,7 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 ## [1.2.0] - Best Practices Implementation
 
 ### Added
+
 - Testes unitários e de integração (26 testes, todos passando).
 - Type hints completos em todo o código.
 - Docstrings Google‑style em funções públicas.
@@ -65,12 +81,14 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 - Exception tracking com stack traces.
 
 ### Changed
+
 - Health check passou a retornar versão, Python version, platform e status de configurações.
 - Tasks inválidas retornam HTTP 400 ao invés de falhar durante a execução.
 - Compatibilização com Pydantic v2 (`model_dump` vs `dict`).
 - Código formatado e lintado de forma consistente.
 
 ### Dependencies
+
 - Adicionados: `pytest`, `pytest-asyncio`, `pytest-cov`.
 - Adicionados: `black`, `ruff`, `mypy`, `pre-commit`.
 - Adicionado: `slowapi` (para futuro rate limiting distribuído).
@@ -80,6 +98,7 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 ## [1.1.0] - Expansão de Funcionalidades
 
 ### Added
+
 - Novas tasks:
   - `notification` – notificações macOS.
   - `get_clipboard` – ler conteúdo do clipboard.
@@ -96,11 +115,13 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
   - Scripts de teste para novas funcionalidades.
 
 ### Changed
+
 - `TaskRunner` refatorado para arquitetura mais escalável.
 - Tratamento de erros mais robusto em todas as tasks.
 - Logs mais detalhados para automações.
 
 ### Dependencies
+
 - Adicionado `pillow` para processamento de imagens.
 
 ---
@@ -108,6 +129,7 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 ## [1.0.0] - Versão Inicial
 
 ### Added
+
 - Backend FastAPI inicial.
 - Integração com LM Studio (API OpenAI‑compatible local).
 - Endpoints principais:
@@ -122,5 +144,3 @@ and this project aims to adhere to [Semantic Versioning](https://semver.org/spec
 - Scripts de inicialização.
 - Control Center interativo.
 - Documentação básica.
-
-

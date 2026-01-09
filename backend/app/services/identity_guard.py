@@ -16,6 +16,7 @@ from re import Pattern
 
 from app.config import settings
 from app.services.logging_utils import get_logger
+from app.services.system_monitor import SystemMonitor
 
 logger = get_logger(__name__)
 
@@ -59,7 +60,9 @@ class IdentityGuard:
         return settings.local_system_prompt
 
     def get_compiled_patterns(self) -> list[Pattern[str]]:
-        """Lazily compile and cache regex patterns for cloud leakage detection."""
+        """
+        Lazily compile and cache regex patterns for cloud leakage detection.
+        """
         if self._compiled_patterns is None:
             self._compiled_patterns = []
             for pattern in settings.cloud_leakage_patterns:
@@ -69,13 +72,27 @@ class IdentityGuard:
                 except re.error as e:
                     logger.warning(
                         "Invalid cloud leakage pattern",
-                        extra={"payload": {"pattern": pattern, "error": str(e)}},
+                        extra={
+                            "payload": {
+                                "pattern": pattern,
+                                "error": str(e),
+                            }
+                        },
                     )
         return self._compiled_patterns
 
     def build_system_message(self) -> dict[str, str]:
-        """Build the system message dict for LM Studio payload."""
-        return {"role": "system", "content": self.system_prompt}
+        """
+        Build the system message dict for LM Studio payload.
+
+        Appends real-time system context (CPU, memory, uptime,
+        active automations) to enable the LLM to answer system status
+        queries accurately.
+        """
+        base_prompt = self.system_prompt
+        context_block = SystemMonitor.get_context_block()
+        full_content = f"{base_prompt}\n\n{context_block}"
+        return {"role": "system", "content": full_content}
 
     def scan_response(self, response: str) -> LeakageDetection:
         """
@@ -185,4 +202,3 @@ def sanitize_response(response: str) -> str:
 def scan_for_leakage(response: str) -> LeakageDetection:
     """Scan response for cloud identity leakage."""
     return identity_guard.scan_response(response)
-

@@ -8,14 +8,15 @@
 
 ## 🎯 SYSTEM ROLE
 
-**FoKS Intelligence** is the **control plane** for system automation.
+**FoKS Intelligence** is the **Non-Autonomous Control Plane** for system automation.
 
 ### Core Responsibilities
 
-1. **Coordination**
+1. **Coordination (Judge Role)**
 
    - Coordinates execution across multiple systems
-   - Delegates execution to FBP Backend
+   - Commands FBP Backend with deterministic instructions
+   - Evaluates results and evidence (does NOT negotiate)
    - Manages high-level workflow orchestration
 
 2. **Delegation**
@@ -39,11 +40,12 @@
 
 ## ✅ MUST (Required Behaviors)
 
-- **MUST** coordinate and delegate execution to FBP
+- **MUST** coordinate and delegate execution to FBP using deterministic commands
 - **MUST** provide unified interface for external clients
 - **MUST** manage conversation state and chat interactions
 - **MUST** route tasks to appropriate systems (FBP, LM Studio, macOS)
-- **MUST** handle coordination-level error recovery
+- **MUST** treat LM Studio output as ADVISORY only (summaries, drafts, plans)
+- **MUST** handle coordination-level error recovery based on evidence from FBP
 - **MUST** optimize for ARM64-native Python behavior
 - **MUST** support async I/O and controlled concurrency
 
@@ -64,20 +66,21 @@
 
 ## 🔗 SYSTEM RELATIONSHIPS
 
-### FoKS ↔ FBP Backend
+### FoKS ↔ FBP Backend (Judge ↔ Bailiff)
 
-- **FoKS Role:** Control plane (coordinates and delegates)
-- **FBP Role:** Execution authority
+- **FoKS Role:** Judge (commands, decides, evaluates)
+- **FBP Role:** Bailiff (executes, reports evidence, no autonomy)
 - **Interface:** UNIX socket (`/tmp/fbp.sock`) or TCP (configurable)
-- **Protocol:** HTTP-like requests with JSON payloads
+- **Protocol:** HTTP-like requests with JSON payloads (Deterministic Commands)
 
 **Boundary Rules:**
 
-- FoKS **MUST** delegate execution to FBP
-- FoKS **MUST NOT** execute automation directly
-- FoKS **MUST NOT** own execution state
-- FBP **MUST** accept execution requests from FoKS
-- FBP **MUST** own all execution state
+- FoKS **MUST** command FBP with deterministic payloads
+- FoKS **MUST NOT** negotiate execution paths with FBP
+- FoKS **MUST** evaluate FBP results based on returned evidence
+- FBP **MUST** execute exactly what is commanded or report failure
+- FBP **MUST NOT** attempt autonomous alternative paths
+- FBP **MUST** own all execution state and return it as evidence
 
 ### FoKS ↔ n8n
 
@@ -96,13 +99,23 @@
 ### FoKS ↔ LM Studio
 
 - **FoKS Role:** Client and coordinator
-- **LM Studio Role:** LLM inference provider
+- **LM Studio Role:** Advisory Inference Provider
 - **Interface:** HTTP (OpenAI-compatible API)
 
 **Boundary Rules:**
 
-- FoKS **MUST** coordinate LLM requests
+- FoKS **MUST** coordinate LLM requests for advisory purposes
+- FoKS **MUST NOT** allow LLM output to dictate control flow or execution logic
 - FoKS **MUST NOT** execute automation based on LLM output (delegate to FBP)
+
+---
+
+## ❄️ FREEZE STATUS (PHASE 6)
+
+- **STATUS:** ACTIVE (7-Day Stability Window)
+- **ENFORCEMENT:** `ops/scripts/freeze_check.sh`
+- **EXPIRY:** 2026-01-16
+- **RULES:** No structural changes to contracts or core services allowed without `FORCE_OVERRIDE`.
 
 ---
 

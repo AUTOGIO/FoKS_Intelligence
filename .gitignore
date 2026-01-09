@@ -1,27 +1,55 @@
 # macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+Icon
+Network Trash Folder
+Temporary Items
+.apdisk
 
 # Python build artifacts
 __pycache__/
 *.py[cod]
+*$py.class
 *.pyo
 *.pyd
 *.so
 *.egg-info/
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg
 
 # Virtual environments
 .venv/
 .venv_*/
 venv/
 env/
+ENV/
+env.bak/
+venv.bak/
 
 # Testing / coverage
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
+.coverage.*
+.cache
+nosetests.xml
 coverage.xml
+*,cover
+.hypothesis/
 htmlcov/
 backend/htmlcov/
 
@@ -31,27 +59,43 @@ logs/*
 ops/logs/*
 !ops/logs/.gitkeep
 *.log
+pip-log.txt
+pip-delete-this-directory.txt
 
 # Local data
 backend/data/*
 !backend/data/.gitkeep
+*.db
+*.sqlite
 
 # Environment files & secrets
 .env
+.env.*
 *.env
 backend/config/environments/*.env
+.secrets
+secrets.*
 
 # Tooling
 node_modules/
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 .idea/
 .cursor/
+.history/
 
 # Misc
 *.swp
 *.swo
+*~
 Thumbs.db
+desktop.ini
 
 # Output and logs directories
 output/
 logs/
+temp/
+tmp/

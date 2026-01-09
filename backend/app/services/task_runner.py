@@ -11,18 +11,20 @@ from __future__ import annotations
 
 import asyncio
 import shlex
-import subprocess
 import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import psutil
+from fastapi.concurrency import run_in_threadpool
+
 from app.config import settings
 from app.services import fbp_service
 from app.services.logging_utils import get_logger
+from app.services.mode_validation_service import mode_validation_service
+from app.services.script_generator_service import script_generator_service
 from app.services.script_runner import run_local_script
-from fastapi.concurrency import run_in_threadpool
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -62,6 +64,9 @@ class TaskRunner:
 
         if task in {"nfa", "redesim", "browser", "utils"}:
             return await self._delegate_to_fbp(task, args)
+
+        if task == "run_mode":
+            return await self._task_run_mode(args, timeout)
 
         handler = getattr(self, f"_task_{task}", None)
         if handler is None:
@@ -277,7 +282,35 @@ class TaskRunner:
             },
         )
 
-        return result
+    async def _task_run_mode(self, args: dict[str, Any], timeout: int) -> dict[str, Any]:
+        """
+        Judge/Bailiff coordination for System Modes (e.g., Work Mode).
+        1. FoKS (Judge) validates readiness.
+        2. FoKS (Judge) generates deterministic script.
+        3. FBP (Bailiff) executes exactly as received.
+        """
+        mode_name = args.get("mode_name")
+        if not mode_name:
+            raise ValueError("Missing 'mode_name' argument")
+
+        # 1. Validation (Judge)
+        validation = await mode_validation_service.validate_readiness(mode_name)
+        if not validation["validation_passed"]:
+            return {
+                "status": "error",
+                "message": f"Preflight validation failed for mode: {mode_name}",
+                "details": validation,
+            }
+
+        # 2. Script Generation (Judge)
+        config = mode_validation_service.load_mode_config(mode_name)
+        script = script_generator_service.generate_mode_script(config)
+
+        # 3. Execution (Bailiff)
+        logger.info(f"Delegating mode execution to FBP: {mode_name}")
+        execution_result = await fbp_service.run_script(script, timeout=timeout)
+
+        return {"mode_name": mode_name, "validation": validation, "execution": execution_result}
 
     async def _run_command(
         self,

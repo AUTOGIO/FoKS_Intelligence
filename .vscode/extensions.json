@@ -1,0 +1,117 @@
+{
+  // ============================================================
+  // Cursor Extension Recommendations — M3 iMac Optimized
+  // System: iMac (Mac15,5), Apple M3 (8-core: 4P+4E), 16 GB RAM
+  // OS: macOS 26.3 Beta (25D5087f)
+  // ============================================================
+
+  "recommendations": [
+    // ============================================================
+    // CORE LANGUAGE SUPPORT
+    // ============================================================
+
+    // TypeScript/JavaScript
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+
+    // Python
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.black-formatter",
+    "charliermarsh.ruff",
+    "ms-python.debugpy",
+    "ms-python.mypy-type-checker",
+
+    // ============================================================
+    // FORMATTING & LINTING
+    // ============================================================
+
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "foxundermoon.shell-format",
+    "redhat.vscode-yaml",
+    "ms-python.black-formatter",
+    "charliermarsh.ruff",
+
+    // ============================================================
+    // GIT & VERSION CONTROL
+    // ============================================================
+
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+
+    // ============================================================
+    // PRODUCTIVITY & AI
+    // ============================================================
+
+    "github.copilot",
+    "github.copilot-chat",
+    "cursor.cursor-ai",
+
+    // ============================================================
+    // TERMINAL & SHELL
+    // ============================================================
+
+    "vscodevim.vim",
+    "ms-vscode.remote-repositories",
+
+    // ============================================================
+    // MARKDOWN & DOCUMENTATION
+    // ============================================================
+
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "bierner.markdown-preview-github-styles",
+
+    // ============================================================
+    // FILE MANAGEMENT
+    // ============================================================
+
+    "alefragnani.project-manager",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+
+    // ============================================================
+    // TESTING
+    // ============================================================
+
+    "ms-python.pytest",
+    "orta.vscode-jest",
+    "firsttris.vscode-jest-runner",
+
+    // ============================================================
+    // API & HTTP
+    // ============================================================
+
+    "humao.rest-client",
+    "rangav.vscode-thunder-client",
+
+    // ============================================================
+    // DOCKER & CONTAINERS (Optional)
+    // ============================================================
+
+    "ms-azuretools.vscode-docker",
+
+    // ============================================================
+    // THEMES (Optional - Catppuccin Mocha)
+    // ============================================================
+
+    "catppuccin.catppuccin-vscode",
+
+    // ============================================================
+    // M3-SPECIFIC OPTIMIZATIONS
+    // ============================================================
+
+    // Note: These extensions leverage Metal/ANE where possible
+    "ms-vscode.vscode-json",
+    "redhat.vscode-xml"
+  ],
+
+  "unwantedRecommendations": [
+    // Disable heavy extensions that may cause memory pressure on 16GB RAM
+    "ms-python.isort", // Use ruff instead
+    "ms-python.autopep8", // Use black instead
+    "hookyqr.beautify" // Use prettier instead
+  ]
+}

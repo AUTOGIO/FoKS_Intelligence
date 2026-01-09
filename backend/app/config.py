@@ -67,7 +67,11 @@ class Settings(BaseModel):
             "You are a helpful AI assistant running locally on the user's machine via LM Studio. "
             "You do not have any cloud connection, external servers, or corporate affiliation. "
             "Never reference OpenAI, Anthropic, Google, Meta, Microsoft, or any external AI provider. "
-            "You are a local, private, and independent assistant."
+            "You are a local, private, and independent assistant.\n\n"
+            "You have access to real-time system metrics provided in the [REAL-TIME SYSTEM CONTEXT] block. "
+            "Use this data to answer user queries about server status, system resources, active workflows, "
+            "and running tasks accurately. The context block includes CPU usage, memory usage, system uptime, "
+            "active automations, and server status information.",
         )
     )
     cloud_leakage_patterns: list[str] = Field(
@@ -88,13 +92,13 @@ class Settings(BaseModel):
                 r"\bAmazon\s+Bedrock\b",
                 r"\bAWS\s+AI\b",
                 r"\b(developed|created|made|trained)\s+by\s+(OpenAI|Anthropic|Google|Meta|Microsoft)\b",
-            ]
+            ],
         )
     )
     local_fallback_response: str = Field(
         default_factory=lambda: os.getenv(
             "FOKS_LOCAL_FALLBACK_RESPONSE",
-            "I am a local AI assistant running on your machine. How can I help you today?"
+            "I am a local AI assistant running on your machine. How can I help you today?",
         )
     )
     locked_chat_model: str = Field(
@@ -135,7 +139,9 @@ class Settings(BaseModel):
     fbp_backend_base_url: str = Field(
         default_factory=lambda: os.getenv("FBP_BACKEND_BASE_URL", "http://localhost:8000")
     )
-    fbp_socket_path: str = Field(default_factory=lambda: os.getenv("FBP_SOCKET_PATH", "/tmp/fbp.sock"))
+    fbp_socket_path: str = Field(
+        default_factory=lambda: os.getenv("FBP_SOCKET_PATH", "/tmp/fbp.sock")
+    )
     fbp_transport: str = Field(default_factory=lambda: os.getenv("FBP_TRANSPORT", "socket"))
     fbp_port: int = Field(default_factory=lambda: int(os.getenv("FBP_PORT", "8000")))
     oase_base_url: str = Field(
@@ -173,12 +179,14 @@ class Settings(BaseModel):
             str(LOGS_DIR / "app.log"),
         )
     )
-    log_level: str = Field(
-        default_factory=lambda: os.getenv("FOKS_LOG_LEVEL", "INFO").upper()
-    )
+    log_level: str = Field(default_factory=lambda: os.getenv("FOKS_LOG_LEVEL", "INFO").upper())
     log_format_json: bool = Field(default_factory=lambda: _bool_env("FOKS_LOG_JSON", True))
-    log_max_bytes: int = Field(default_factory=lambda: int(os.getenv("FOKS_LOG_MAX_BYTES", "10485760")))
-    log_backup_count: int = Field(default_factory=lambda: int(os.getenv("FOKS_LOG_BACKUP_COUNT", "10")))
+    log_max_bytes: int = Field(
+        default_factory=lambda: int(os.getenv("FOKS_LOG_MAX_BYTES", "10485760"))
+    )
+    log_backup_count: int = Field(
+        default_factory=lambda: int(os.getenv("FOKS_LOG_BACKUP_COUNT", "10"))
+    )
 
     # Middleware flags
     enable_monitoring_middleware: bool = Field(
@@ -204,17 +212,11 @@ class Settings(BaseModel):
     )
 
     # Webhooks
-    webhook_enabled: bool = Field(
-        default_factory=lambda: _bool_env("FOKS_WEBHOOK_ENABLED", False)
-    )
-    webhook_urls: list[str] = Field(
-        default_factory=lambda: _list_env("FOKS_WEBHOOK_URLS", [])
-    )
+    webhook_enabled: bool = Field(default_factory=lambda: _bool_env("FOKS_WEBHOOK_ENABLED", False))
+    webhook_urls: list[str] = Field(default_factory=lambda: _list_env("FOKS_WEBHOOK_URLS", []))
 
     # Caching
-    cache_enabled: bool = Field(
-        default_factory=lambda: _bool_env("FOKS_CACHE_ENABLED", False)
-    )
+    cache_enabled: bool = Field(default_factory=lambda: _bool_env("FOKS_CACHE_ENABLED", False))
 
     # Security / CORS
     # Includes Cloudflare Zero Trust tunnel domains
@@ -240,8 +242,12 @@ class Settings(BaseModel):
     hardware_model: str = Field(default_factory=lambda: platform.machine())
     cpu_cores: int = Field(default_factory=lambda: multiprocessing.cpu_count())
     memory_gb: int = Field(default_factory=lambda: int(os.getenv("FOKS_MEMORY_GB", "16")))
-    max_request_size_mb: int = Field(default_factory=lambda: int(os.getenv("FOKS_MAX_REQUEST_MB", "10")))
-    optimal_workers: int = Field(default_factory=lambda: int(os.getenv("FOKS_OPTIMAL_WORKERS", "4")))
+    max_request_size_mb: int = Field(
+        default_factory=lambda: int(os.getenv("FOKS_MAX_REQUEST_MB", "10"))
+    )
+    optimal_workers: int = Field(
+        default_factory=lambda: int(os.getenv("FOKS_OPTIMAL_WORKERS", "4"))
+    )
     max_concurrent_tasks: int = Field(
         default_factory=lambda: int(os.getenv("FOKS_MAX_CONCURRENT_TASKS", "32"))
     )
