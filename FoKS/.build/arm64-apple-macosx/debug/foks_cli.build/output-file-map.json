@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/foks_cli.build/master.swiftdeps"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/Sources/foks-cli/main.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/foks_cli.build/main.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/foks_cli.build/main.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/foks_cli.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/foks_cli.build/main.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/foks_cli.build/main.dia"
+  }
+}

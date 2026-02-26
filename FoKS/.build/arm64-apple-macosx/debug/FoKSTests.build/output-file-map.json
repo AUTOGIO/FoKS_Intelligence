@@ -1,0 +1,19 @@
+{
+  "": {
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/master.swiftdeps"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/Tests/FoKSTests/PortfolioStoreTests.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/PortfolioStoreTests.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/PortfolioStoreTests.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/PortfolioStoreTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/PortfolioStoreTests.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/PortfolioStoreTests.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/Tests/FoKSTests/ScreenTimeServiceTests.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/ScreenTimeServiceTests.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/ScreenTimeServiceTests.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/ScreenTimeServiceTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/ScreenTimeServiceTests.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSTests.build/ScreenTimeServiceTests.dia"
+  }
+}

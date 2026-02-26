@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSPackageTests.build/master.swiftdeps"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSPackageTests.derived/runner.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSPackageTests.build/runner.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSPackageTests.build/runner.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKSPackageTests.build/runner.dia"
+  }
+}

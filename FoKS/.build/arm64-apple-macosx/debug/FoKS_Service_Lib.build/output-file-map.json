@@ -1,0 +1,145 @@
+{
+  "": {
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/master.swiftdeps"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/App/FoKSConfig.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FoKSConfig.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FoKSConfig.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FoKSConfig~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FoKSConfig.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FoKSConfig.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Models/FileCategory.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileCategory.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileCategory.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileCategory~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileCategory.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileCategory.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Models/FileItem.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileItem.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileItem.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileItem~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileItem.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileItem.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Models/NoteItem.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NoteItem.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NoteItem.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NoteItem~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NoteItem.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NoteItem.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Models/Portfolio.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/Portfolio.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/Portfolio.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/Portfolio~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/Portfolio.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/Portfolio.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Models/SystemModels.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/SystemModels.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/SystemModels.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/SystemModels~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/SystemModels.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/SystemModels.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Models/WorkspaceProfile.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WorkspaceProfile.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WorkspaceProfile.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WorkspaceProfile~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WorkspaceProfile.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WorkspaceProfile.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/AIEvaluationService.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/AIEvaluationService.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/AIEvaluationService.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/AIEvaluationService~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/AIEvaluationService.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/AIEvaluationService.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/EmbeddedHTTPServer.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/EmbeddedHTTPServer.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/EmbeddedHTTPServer.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/EmbeddedHTTPServer~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/EmbeddedHTTPServer.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/EmbeddedHTTPServer.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/FBPClient.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FBPClient.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FBPClient.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FBPClient~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FBPClient.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FBPClient.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/FileOrganizationService.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileOrganizationService.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileOrganizationService.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileOrganizationService~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileOrganizationService.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/FileOrganizationService.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/KeychainHelper.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/KeychainHelper.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/KeychainHelper.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/KeychainHelper~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/KeychainHelper.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/KeychainHelper.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/NFAFileOrganizationBridge.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NFAFileOrganizationBridge.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NFAFileOrganizationBridge.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NFAFileOrganizationBridge~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NFAFileOrganizationBridge.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NFAFileOrganizationBridge.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/NotesAppleScriptBridge.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NotesAppleScriptBridge.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NotesAppleScriptBridge.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NotesAppleScriptBridge~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NotesAppleScriptBridge.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/NotesAppleScriptBridge.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/OpenAIService.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/OpenAIService.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/OpenAIService.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/OpenAIService~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/OpenAIService.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/OpenAIService.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/PortfolioStore.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/PortfolioStore.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/PortfolioStore.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/PortfolioStore~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/PortfolioStore.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/PortfolioStore.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/ProcessMonitor.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProcessMonitor.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProcessMonitor.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProcessMonitor~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProcessMonitor.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProcessMonitor.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/ProfileStore.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProfileStore.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProfileStore.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProfileStore~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProfileStore.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ProfileStore.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/ScreenTimeService.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ScreenTimeService.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ScreenTimeService.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ScreenTimeService~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ScreenTimeService.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/ScreenTimeService.dia"
+  },
+  "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/FoKS/Services/WindowManager.swift": {
+    "dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WindowManager.d",
+    "object": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WindowManager.swift.o",
+    "swiftmodule": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WindowManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WindowManager.swiftdeps",
+    "diagnostics": "/Users/dnigga/Documents/Active_Projects/FoKS_Intelligence/FoKS/.build/arm64-apple-macosx/debug/FoKS_Service_Lib.build/WindowManager.dia"
+  }
+}
