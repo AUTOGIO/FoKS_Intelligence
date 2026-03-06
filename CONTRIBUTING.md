@@ -4,8 +4,8 @@ Thanks for your interest in contributing! This project powers local automation o
 
 - Backend: FastAPI + Pydantic + SQLAlchemy (async)  
 - Ops: Shell + launchd + iTerm2 + Shortcuts + n8n / Node‑RED  
-- Models: LM Studio (local LLMs, OpenAI‑compatible API)  
-- External automation: FBP backend (in `/Users/<you>/Documents/FBP_Backend`)
+- Models: OpenAI API (cloud LLMs via OPENAI_API_KEY)  
+- External automation: FBP backend (Swift surface: fbp-cli only)
 
 Please read this document before opening PRs.
 
@@ -18,12 +18,12 @@ Please read this document before opening PRs.
   - Fixing broken imports, tests or type errors,
   - Aligning with the documented architecture.
 - **Respect the layering**:
-  - Router → Service → Module/Core → External (DB, LM Studio, macOS).
+  - Router → Service → Module/Core → External (DB, OpenAI, macOS).
 - **Never commit secrets**:
   - No real credentials, tokens, or personal data.
   - `.env`, `*.env`, local DBs and logs must remain git‑ignored.
 - **Prefer local & offline first**:
-  - LM Studio over cloud APIs,
+  - OpenAI API for LLM inference,
   - Local scripts over external webhooks, unless explicitly required.
 
 ---
@@ -74,8 +74,8 @@ bash ops/scripts/foks_boot.sh
 
 ### 3.2. FBP Backend (Optional)
 
-The FBP backend lives outside this repo (e.g. `~/Documents/FBP_Backend`).  
-Follow its own `README.md` and `PROJECT_FULL_REPORT.md`.
+The FBP backend lives outside this repo (e.g. `~/Documents/Active_Projects/FBP_Backend`).  
+Swift surface: **fbp-cli** only (NFASEFAZPB Safari extension removed). Follow FBP’s own `README.md`.
 
 ---
 
@@ -128,7 +128,7 @@ pytest -k lmstudio # subset
 All new code should have at least basic test coverage. Prefer:
 
 - **Unit tests** for pure functions / services.
-- **Integration tests** for routers and LM Studio / FBP integration (mock when needed).
+- **Integration tests** for routers and OpenAI / FBP integration (mock when needed).
 
 ---
 
@@ -151,8 +151,8 @@ All new code should have at least basic test coverage. Prefer:
   - `fix/<issue-or-bug>`
   - `ops/<ops-change>`
 - Commit messages:
-  - Use present tense: `Add LM Studio watcher`, `Fix ops watchdog logging`.
-  - Reference scope where helpful: `ops: add FoKS watchdog`, `backend: fix lmstudio client retry`.
+  - Use present tense: `Add OpenAI health watcher`, `Fix ops watchdog logging`.
+  - Reference scope where helpful: `ops: add FoKS watchdog`, `app: fix OpenAI client retry`.
 
 Before opening a PR:
 
